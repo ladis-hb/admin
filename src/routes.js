@@ -1,7 +1,11 @@
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Main from './views/Main.vue'
+const Main = ()=>import('@/views/Main.vue')
+const Air = ()=>import('@/views/main/Air')
+const IO = ()=>import('@/views/main/IO')
+const TH = () => import('@/views/main/TH')
+//import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
 import Form from './views/nav1/Form.vue'
 import user from './views/nav1/user.vue'
@@ -23,6 +27,7 @@ let routes = [
         name: '',
         hidden: true
     },
+    //add
     {
         path:'/',
         component:Home,
@@ -32,6 +37,7 @@ let routes = [
             {path:'/main',name:'设备概览',component:Main}
         ]
     },
+    
     // home 导航
     // UPS
     {
@@ -44,10 +50,6 @@ let routes = [
             {path:'/ups1',component:Table,name:'单输入单输出',iconCls:['fa','fa-battery-full']},
             {path:'/ups2',component:Form,name:'三输入单输出',iconCls:['fa','fa-battery-full']},
             {path:'/ups3',component:user,name:'三输入三输出',iconCls:['fa','fa-battery-full']},
-            /* { path: '/main', component: Main, name: '主页' },
-            { path: '/table', component: Table, name: 'Table' },
-            { path: '/form', component: Form, name: 'Form' },
-            { path: '/user', component: user, name: '列表' }, */
         ]
     },
     /* 
@@ -60,7 +62,7 @@ let routes = [
         iconCls:["fa"," fa-snowflake-o"],
         leaf:true,
         children:[
-            {path:'/cool',component:Table,name:'空调',iconCls:["fa"," fa-snowflake-o"]}
+            {path:'/cool',component:Air,name:'空调',iconCls:["fa"," fa-snowflake-o"]}
         ]
     },
 
@@ -88,7 +90,7 @@ let routes = [
         leaf:true,
         iconCls:["fa"," fa-deaf"],
         children:[
-            {path:'/io',name:'io',component:echarts,iconCls:["fa"," fa-deaf"]}
+            {path:'/io',name:'io',component:IO,iconCls:["fa"," fa-deaf"]}
         ]
     },
     /* 
@@ -101,7 +103,7 @@ let routes = [
         leaf:true,
         iconCls:["fa"," fa-thermometer-empty"],
         children:[
-            {path:'/Temperature-humidity',name:'温湿度',component:echarts,iconCls:["fa"," fa-thermometer-empty"]}
+            {path:'/Temperature-humidity',name:'温湿度',component:TH,iconCls:["fa"," fa-thermometer-empty"]}
         ]
     },
 

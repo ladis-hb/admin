@@ -11,7 +11,13 @@ const state = {
     sysname:'Ladis UPS',
     random:Math.random()*Math.random(),
     // dev data
-    dev:{},
+    dev:{
+        "ups":[],
+        "air_cool":[],
+        "io":[],
+        "power":[],
+        "th":[]
+        },
     warringinfo:[],
     loginfo:[]
 }
@@ -28,14 +34,11 @@ const mutations = {
     SETDEV(state,data){
         if(state.dev.data == undefined){
             state.dev = data.data
-            //console.log(state.dev.data)
         } else{            
             let array = data.data.data
             for (var i in array){
-                //console.log(i)
                 for(var ii in array[i]){
-                    //console.log(ii)
-                    state.dev.data[i][ii].arg.unshift(array[i][ii].arg[0])
+                    state.dev.data[i][ii].arg.push(array[i][ii].arg[0])
                     state.dev.data[i][ii].date = array[i][ii].date
                 }
             }
@@ -46,7 +49,6 @@ const mutations = {
     //set warring
     SETWARRING(state,data){        
         state.warringinfo = data.data
-        //console.log(state.warringinfo.data)
     },
     //set log
     SETLOG(state,data){

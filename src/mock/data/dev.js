@@ -124,20 +124,20 @@ Starting temperature setting, temperature difference, air supply temperature
 */
 const AIR_COOL = {
     name:'cool',
-    devid:0,
+    devid:1,
     brand:'cool',
-    refrigeration_temperature:0,
+    refrigeration_temperature:2,
     mode:['stand','run','stop'],
-    refrigeration_stop_deviation:0,
-    evaporation_start_temperature:0,
-    air_change_time:0,
+    refrigeration_stop_deviation:3,
+    evaporation_start_temperature:7,
+    air_change_time:5,
     opening_delay:0,
-    high_temperature_alarm_point:0,
+    high_temperature_alarm_point:5,
     return_air_temperature:0,
     coil_temperature:0,
-    modified_return_air_temperature:0,
+    modified_return_air_temperature:8,
     Correct_air_outlet_temperature:0,
-    defrosting_temperature_setting:0,
+    defrosting_temperature_setting:9,
     heating_opening_deviation:0,
     heating_stop_deviation:0,
     refrigeration_start_deviation:0,
@@ -192,8 +192,8 @@ const IO = {
     name:'io',
     devid:0,
     brand:'io',
-    power_status:0,
-    input_status:0
+    power_status:true,
+    input_status:false
 }
 
 /*  
@@ -204,8 +204,8 @@ const TH = {
     name:'Temperature humidity',
     devid:0,
     brand:'th',
-    temperature:0,
-    humidity:0
+    temperature:27,
+    humidity:80
 }
 
 export {UPS,AIR_COOL,POWER,IO,TH}

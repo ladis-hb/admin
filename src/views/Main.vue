@@ -1,5 +1,6 @@
 <template>
-	<section :v-loading="loading">
+	<section v-loading="loading">
+		<keep-alive>
 		<el-row>
 		  <el-col :span="24">		
 		<el-card class='all-x'>
@@ -379,45 +380,25 @@
 		</el-card>
 		  </el-col>
 
-		  <!-- warring -->
-		  <el-col :span="12">
-			<el-card class="all-x">
-				  <template>
-  					<el-table :data="warringinfo" height="250" style="width: 100%">
-    					<el-table-column prop="id" label="id" width="60px"></el-table-column>
-    					<el-table-column prop="type" label="type" width="100px"></el-table-column>
-    					<el-table-column prop="level" label="level"  width="50px"></el-table-column>
-						<el-table-column prop="info" label="info"></el-table-column>
-						<el-table-column prop="date" label="date"  width="100px"></el-table-column>
-  					</el-table>
-				</template>
-			  </el-card>
-		  </el-col>
-		  <!-- log -->
-		  <el-col :span="12">
-			  <el-card class="all-x">
-				  <template>
-  					<el-table :data="loginfo" height="250" style="width: 100%">
-    					<el-table-column prop="id" label="id" width="100px"></el-table-column>
-    					<el-table-column prop="type" label="type"></el-table-column>
-						<el-table-column prop="info" label="info"></el-table-column>
-						<el-table-column prop="date" label="date"></el-table-column>
-  					</el-table>
-				</template>
-			  </el-card>
-		  </el-col>
-		</el-row>		
+		  <log :infodata = "warringinfo"></log>
+		  <log :infodata = "loginfo"></log>
+		</el-row>
+		</keep-alive>		
 	</section>
 </template>
 
 <script>
 	import {getDevInfo,getWarringInfo,getLog} from "../api/api";
+	import log from "./log/log.vue";
 	export default {		
 		data(){
 			return{
 				cardcss:true,
-				loading:true
+				loading:false
 			}
+		},
+		components:{
+			log
 		},
 		computed:{
 			devinfo:{
@@ -456,13 +437,19 @@
 				this.getdevinfo()
 				this.getwarring()
 				this.getinfo()
-				this.$notify({message:'已更新数据！！！'})
-				//this.loading = false
+				this.$notify({message:'已更新数据！！！',position: 'bottom-right'})
+				this.loading = false
 			}
 		},
 		mounted(){					
-			setInterval(this.interval,30000)
+			setInterval(this.interval,6000)
 			this.interval()
+		},
+		beforeUpdate() {
+			
+		},
+		updated(){
+			
 		}
 	}
 

@@ -164,6 +164,8 @@ export default {
       let p1 = POWER.power1
       let p3 = POWER.power3
       let t1 = TH  
+
+      
       
       let d = new Date()
       function getdate() { 
@@ -172,6 +174,16 @@ export default {
         var s = d.getSeconds()
         return `${h}:${m}:${s}`
        }
+
+       u1.date = getdate()
+       u2.date = getdate()
+       c1.date = getdate()
+       c2.date = getdate()
+       i1.date = getdate()
+       i2.date = getdate()
+       p1.date = getdate()
+       p3.date = getdate()
+       t1.date = getdate()
 
         return new Promise((res,rej)=>{
           res([200,{
@@ -248,7 +260,7 @@ export default {
 
     //get warring
     mock.onGet('/info/warring').reply(config => {
-      var data = defaultinfo()
+      var data = defaultwarring()
       return new Promise((resolve, reject) => {
         resolve([200, {
           data:data

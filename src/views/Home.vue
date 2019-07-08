@@ -17,7 +17,7 @@
 				<el-dropdown trigger="hover">
 					<span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /> {{sysUserName}}</span>
 					<el-dropdown-menu slot="dropdown">
-						<el-dropdown-item><i class="el-icon-star-on"><span style="float:right">info</span> </i></el-dropdown-item>
+						<el-dropdown-item><i class="el-icon-star-on"></i><span style="float:aling">info</span></el-dropdown-item>
 						<el-dropdown-item><i class="el-icon-setting"></i><span>setting</span> </el-dropdown-item>
 						<el-dropdown-item><i class="fa fa-sign-out"></i><span>ligin out</span> </el-dropdown-item>
 					</el-dropdown-menu>
@@ -46,28 +46,9 @@
 						
 						  <el-menu-item v-for="(child,key) in item.children" :index="child.path" :key="key+random">
 							  {{child.name}}
-						  </el-menu-item>
-						
+						  </el-menu-item>						
 					</el-submenu>
 				</el-menu>
-
-				<!--导航菜单-折叠后-->
-				<!-- <ul class="el-menu el-menu-vertical-demo collapsed" v-show="collapsed" ref="menuCollapsed">
-					<li v-for="(item,index) in $router.options.routes" v-if="!item.hidden" class="el-submenu item">
-						<template v-if="!item.leaf">
-							<div class="el-submenu__title" style="padding-left: 20px;" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"><i :class="item.iconCls"></i></div>
-							<ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)"> 
-								<li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">{{child.name}}</li>
-							</ul>
-						</template>
-						<template v-else>
-							<li class="el-submenu">
-								<div class="el-submenu__title el-menu-item" style="padding-left: 20px;height: 56px;line-height: 56px;padding: 0 20px;" :class="$route.path==item.children[0].path?'is-active':''" @click="$router.push(item.children[0].path)"><i :class="item.iconCls"></i></div>
-							</li>
-						</template>
-					</li>
-				</ul> -->
-
 			</aside>
 			<section class="content-container">
 				<div class="grid-content bg-purple-light">
@@ -106,7 +87,7 @@
 					type: [],
 					resource: '',
 					desc: ''
-				}
+				},
 			}
 		},
 		computed:{
