@@ -1,60 +1,67 @@
 <template>
-    <keep-alive>
-        <el-row>            
-            <el-col :span="24">
-                <el-card class="all-x"  v-for="(item, index) in airs" :key="index">
-                <strong>{{item.name}}/Devid:{{item.devid}}</strong>
-                <div></div>
-                <strong>mode:{{arg.status[item.name]?arg.status[item.name].mode:'no'}}/brand:{{item?item.brand:'nan'}}/</strong>
-                <hr/>
-                <strong >power_status:</strong>
-                <el-switch style="display: block" :value="serizeData(item).power_status" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                <strong >input_status</strong> 
-                <el-switch style="display: block" :value="serizeData(item).input_status" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-              </el-card>  
-            </el-col>
-            
-        </el-row>
-    </keep-alive>
+  <keep-alive>
+    <el-row>
+      <el-col :span="24" v-for="(item, index) in airs" :key="index" class="card">
+        <hr />
+        <el-col :span="24">
+          <h4>{{lang.Devid}}:</h4>
+          <p>{{item.devid}}</p>
+        </el-col>
+        <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
+          <h4>{{lang[val]}}:</h4>
+          <p>{{item[val]?item[val]:item.arg[val]}}</p>
+        </el-col>
+        <div>
+          <el-col :span="12" v-for="(val,key) in arr_gress" :key="key">
+            <h4>{{lang[val]}}:</h4>
+            <i :class="item[val]?el_icon_open:el_icon_turn_off"></i>
+          </el-col>
+        </div>
+      </el-col>
+    </el-row>
+  </keep-alive>
 </template>
 
 <script>
 export default {
-    data(){
-        return{
-        }
+  data() {
+    return {
+      arr_title: ["name", "brand", "status"],
+      arr_gress: ["power_status", "input_status"],
+      el_icon_open: ["el-icon-open"],
+      el_icon_turn_off: ["el-icon-turn-off"]
+    };
+  },
+  computed: {
+    airs() {
+      if (typeof this.$store.state.dev.data == "undefined") {
+        return { io: [] };
+      }
+      console.log(this.$store.state.dev.data.io);
+      return this.$store.state.dev.data.io;
     },
-    computed:{
-        airs(){
-            if(typeof(this.$store.state.dev.data) == 'undefined'){
-                return {io:[]}
-            }
-            return this.$store.state.dev.data.io
-            
-        },
-    },
-    methods:{
-        serizeData(item){            
-            var arg = item.arg
-            if(typeof(arg) == 'object'){
-                var n = arg.length-1
-                return {
-                    power_status:arg[n].power_status,
-                    input_status:arg[n].input_status
-                }
-            }
-            return {
-                input_status:false,
-                power_status:false
-            }            
-        }
+    lang() {
+      return this.$store.getters.language;
     }
-}
+  },
+  methods: {}
+};
 </script>
 
 <style scoped>
-    .all-x{
-		width: max-width;
-		margin-top: 15px;
-	}
+.all-x {
+  width: max-width;
+  margin-top: 15px;
+}
+
+h4,
+p {
+  display: inline-block;
+}
+h3 {
+  text-align: center;
+}
+.swith {
+  display: inline-block;
+}
 </style>

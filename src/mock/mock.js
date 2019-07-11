@@ -1,8 +1,8 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { LoginUsers, Users } from './data/user';
-import {UPS,AIR_COOL,POWER,IO,TH} from'./data/dev';
-import {defaultinfo,defaultwarring,warring,log} from './data/info'
+import { UPS, AIR_COOL, POWER, IO, TH } from './data/dev';
+import { defaultinfo, defaultwarring, warring, log } from './data/info'
 var md5 = require('md5')
 let _Users = Users;
 
@@ -25,11 +25,11 @@ export default {
 
     //登录
     mock.onPost('/login').reply(config => {
-      let {username, password} = JSON.parse(config.data);
+      let { username, password } = JSON.parse(config.data);
       return new Promise((resolve, reject) => {
         let user = null;
         setTimeout(() => {
-          let hasUser = LoginUsers.some(u => { 
+          let hasUser = LoginUsers.some(u => {
             if (u.username === username && u.password === password) {
               user = JSON.parse(JSON.stringify(u));
               user.password = undefined;
@@ -48,7 +48,7 @@ export default {
 
     //获取用户列表
     mock.onGet('/user/list').reply(config => {
-      let {name} = config.params;
+      let { name } = config.params;
       let mockUsers = _Users.filter(user => {
         if (name && user.name.indexOf(name) == -1) return false;
         return true;
@@ -64,7 +64,7 @@ export default {
 
     //获取用户列表（分页）
     mock.onGet('/user/listpage').reply(config => {
-      let {page, name} = config.params;
+      let { page, name } = config.params;
       let mockUsers = _Users.filter(user => {
         if (name && user.name.indexOf(name) == -1) return false;
         return true;
@@ -154,7 +154,7 @@ export default {
     });
 
     //get dev list
-    mock.onGet('/dev/all').reply(config=>{
+    mock.onGet('/dev/all').reply(config => {
       let u1 = UPS.ups1
       let u2 = UPS.ups3
       let c1 = AIR_COOL
@@ -163,98 +163,104 @@ export default {
       let i2 = IO
       let p1 = POWER.power1
       let p3 = POWER.power3
-      let t1 = TH  
+      let t1 = TH
 
-      
-      
       let d = new Date()
-      function getdate() { 
+      function getdate() {
         var h = d.getHours()
         var m = d.getMinutes()
         var s = d.getSeconds()
         return `${h}:${m}:${s}`
-       }
+      }
 
-       u1.date = getdate()
-       u2.date = getdate()
-       c1.date = getdate()
-       c2.date = getdate()
-       i1.date = getdate()
-       i2.date = getdate()
-       p1.date = getdate()
-       p3.date = getdate()
-       t1.date = getdate()
+      u1.date = getdate()
+      u2.date = getdate()
+      c1.date = getdate()
+      c2.date = getdate()
+      i1.date = getdate()
+      i2.date = getdate()
+      p1.date = getdate()
+      p3.date = getdate()
+      t1.date = getdate()
 
-        return new Promise((res,rej)=>{
-          res([200,{
-            data:{
-              ups:[
-                {
-                  name:'u1',
-                  devid:md5(634585),
-                  date:getdate(),
-                  arg:[u1]
-                },
-                {
-                  name:'u2',
-                  devid:md5(3585),
-                  date:getdate(),
-                  arg:[u2]
-                }
-              ],
-              air_cool:[
-                {
-                  name:'c1',
-                  devid:md5(54548565),
-                  date:getdate(),
-                  arg:[c1]
-                },
-                {
-                  name:'c2',
-                  devid:md5(3656525),
-                  date:getdate(),
-                  arg:[c2]
-                }
-              ],
-              io:[
-                {
-                  name:'i1',
-                  devid:md5(35512585),
-                  date:getdate(),
-                  arg:[i1]
-                },
-                {
-                  name:'i2',
-                  devid:md5(358121585),
-                  date:getdate(),
-                  arg:[i2]
-                }
-              ],
-              power:[
-                {
-                  name:'p1',
-                  devid:md5(35552585),
-                  date:getdate(),
-                  arg:[p1]
-                },
-                {
-                  name:'p3',
-                  devid:md5(35885121585),
-                  date:getdate(),
-                  arg:[p3]
-                }
-              ],
-              th:[
-                {
-                  name:'t1',
-                  devid:md5(35512893585),
-                  date:getdate(),
-                  arg:[t1]
-                },
-              ]
-            }
-          }])
-        })
+      var data = {
+        ups: [
+          {
+            name: 'u1',
+            devid: md5(634585),
+            date: getdate(),
+            arg: u1,
+            args: []
+          },
+          {
+            name: 'u2',
+            devid: md5(3585),
+            date: getdate(),
+            arg: u2,
+            args: []
+          }
+        ],
+        air_cool: [
+          {
+            name: 'c1',
+            devid: md5(54548565),
+            date: getdate(),
+            arg: c1,
+            args: []
+          },
+          {
+            name: 'c2',
+            devid: md5(3656525),
+            date: getdate(),
+            arg: c2,
+            args: []
+          }
+        ],
+        io: [
+          {
+            name: 'i1',
+            devid: md5(35512585),
+            date: getdate(),
+            arg: i1,
+            args: []
+          },
+          {
+            name: 'i2',
+            devid: md5(358121585),
+            date: getdate(),
+            arg: i2,
+            args: []
+          }
+        ],
+        power: [
+          {
+            name: 'p1',
+            devid: md5(35552585),
+            date: getdate(),
+            arg: p1,
+            args: []
+          },
+          {
+            name: 'p3',
+            devid: md5(35885121585),
+            date: getdate(),
+            arg: p3,
+            args: []
+          }
+        ],
+        th: [
+          {
+            name: 't1',
+            devid: md5(35512893585),
+            date: getdate(),
+            arg: t1,
+            args: []
+          },
+        ]
+      }
+      return new Promise((res, rej) => {
+        res([200, { data: data }])
+      })
     });
 
 
@@ -263,7 +269,7 @@ export default {
       var data = defaultwarring()
       return new Promise((resolve, reject) => {
         resolve([200, {
-          data:data
+          data: data
         }]);
       });
     });
@@ -273,7 +279,7 @@ export default {
       var data = defaultinfo()
       return new Promise((resolve, reject) => {
         resolve([200, {
-          data:data
+          data: data
         }]);
       });
     });

@@ -13,40 +13,48 @@ Input voltage L1, input voltage L2, input voltage L3, output voltage, load ratio
 名称、温度、品牌、状态、相位、剩余容量、电池电压、负电池电压、烟感、门禁、输入电压L1、输入电压L2、输入电压L3、输出频率、输出电压L1、输出电压L2、输出电压L3、输出负载L1、输出负载L2、输出负载L3、负载比率
 */
 
-const UPS = {
-    upsDefault: {
-        devid:0,
-        name:'upsDefault',
-        temperature:1,
-        brand:'ups',
-        status:false,
-        phase:3,
-        residual_capacity:0,
-        battery_voltage:0,
-        battery_voltage_negative:8,
-        smoke:false,
-        access_contral:false,
-        load_ratio:0,
-        output_frequency:0
-    }
+
+const upsDefault = {
+    name: 'upsDefault',
+    temperature: 1,
+    brand: 'ups',
+    status: 1,
+    phase: 3,
+    residual_capacity: 0,
+    battery_voltage: 0,
+    battery_voltage_negative: 8,
+    smoke: 'you',
+    access_contral: false,
+    load_ratio: 50,
+    output_frequency: 0
 }
-UPS.ups1 = UPS.upsDefault
-UPS.ups1.input_voltage=0
-UPS.ups1.output_voltage=0
+const u1 = {
+    type: 1,
+    input_voltage: 220,
+    output_voltage: 380,
+}
+const u2 = {
+    type: 2,
+    input_voltage_l1: 0,
+    input_voltage_l2: 0,
+    input_voltage_l3: 0,
+    output_voltage: 0
+}
+const u3 = {
+    type: 3,
+    input_voltage_l1: 220,
+    input_voltage_l2: 220,
+    input_voltage_l3: 380,
+    output_voltage_l1: 220,
+    output_voltage_l2: 240,
+    output_voltage_l3: 220
+}
 
-UPS.ups2 = UPS.upsDefault
-UPS.ups2.input_voltage_l1=0
-UPS.ups2.input_voltage_l2=0
-UPS.ups2.input_voltage_l3=0
-UPS.ups2.output_voltage=0
-
-UPS.ups3 = UPS.upsDefault
-UPS.ups3.input_voltage_l1=0
-UPS.ups3.input_voltage_l2=0
-UPS.ups3.input_voltage_l3=0
-UPS.ups3.output_voltage_l1=0
-UPS.ups3.output_voltage_l2=0
-UPS.ups3.output_voltage_l3=0
+const UPS = {
+    ups1: Object.assign(u1, upsDefault),
+    ups2: Object.assign(u2, upsDefault),
+    ups3: Object.assign(u3, upsDefault)
+}
 
 /* 
 ups1 = {
@@ -123,28 +131,28 @@ Heating stop deviation, refrigeration start deviation, air outlet temperature de
 Starting temperature setting, temperature difference, air supply temperature
 */
 const AIR_COOL = {
-    name:'cool',
-    devid:1,
-    brand:'cool',
-    refrigeration_temperature:2,
-    mode:['stand','run','stop'],
-    refrigeration_stop_deviation:3,
-    evaporation_start_temperature:7,
-    air_change_time:5,
-    opening_delay:0,
-    high_temperature_alarm_point:5,
-    return_air_temperature:0,
-    coil_temperature:0,
-    modified_return_air_temperature:8,
-    Correct_air_outlet_temperature:0,
-    defrosting_temperature_setting:9,
-    heating_opening_deviation:0,
-    heating_stop_deviation:0,
-    refrigeration_start_deviation:0,
-    air_outlet_temperature_deviation:0,
-    Starting_temperature_setting:0,
-    temperature_difference:0,
-    air_supply_temperature:0
+    name: 'cool',
+    devid: 1,
+    brand: 'cool',
+    refrigeration_temperature: 2,
+    mode: ['stand', 'run', 'stop'],
+    refrigeration_stop_deviation: 3,
+    evaporation_start_temperature: 7,
+    air_change_time: 5,
+    opening_delay: 0,
+    high_temperature_alarm_point: 5,
+    return_air_temperature: 33,
+    coil_temperature: 2,
+    modified_return_air_temperature: 8,
+    Correct_air_outlet_temperature: 0,
+    defrosting_temperature_setting: 9,
+    heating_opening_deviation: 0,
+    heating_stop_deviation: 0,
+    refrigeration_start_deviation: 0,
+    air_outlet_temperature_deviation: 0,
+    Starting_temperature_setting: 0,
+    temperature_difference: 55,
+    air_supply_temperature: 66
 }
 
 /*  
@@ -155,32 +163,41 @@ Input voltage,                input current,                input frequency,    
 A相输入电压（上门限、下门限、当前值）、B相输入电压（上门限、下门限、当前值）、C相输入电压（上门限、下门限、当前值）、A相输入电流（上门限、下门限、当前值）、B相输入电流（上门限、下门限、当前值）、C相输入电流（上门限、下门限、当前值）、A相有功功率（上门限、下门限、当前值）、B相有功功率（上门限、下门限、当前值）、C相有功功率（上门限、下门限、当前值）、有功功率（上门限、下门限、当前值）、无功功率（上门限、下门限、当前值）、功率因素（上门限、下门限、当前值）
  */
 
-const POWER = {
-    powerDefault:{
-        name:'power',
-        devid:0,
-        brand:'power',
-        active_power:[1,-1,0],
-        reactive_power:[1,-1,0],
-        power_factor:[1,-1,0],
-        quantity:[1,-1,0]
-    }
-}
-POWER.power1 = POWER.powerDefault
-POWER.power1.input_voltage = [1,-1,0]
-POWER.power1.input_current = [1,-1,0]
-POWER.power1.input_frequency=[1,-1,0]
 
-POWER.power3 = POWER.powerDefault
-POWER.power3.input_voltage_l1 = [1,-1,0]
-POWER.power3.input_voltage_l2 = [1,-1,0]
-POWER.power3.input_voltage_l3 = [1,-1,0]
-POWER.power3.input_current_l1 = [1,-1,0]
-POWER.power3.input_current_l2 = [1,-1,0]
-POWER.power3.input_current_l3 = [1,-1,0]
-POWER.power3.input_frequency_l1 =[1,-1,0]
-POWER.power3.input_frequency_l2 =[1,-1,0]
-POWER.power3.input_frequency_l3 =[1,-1,0]
+const powerDefault = {
+    name: 'power',
+    devid: 0,
+    brand: 'power',
+    active_power: [10, 1, 99],
+    reactive_power: [100, 2, 3],
+    power_factor: [99, 3, 5],
+    quantity: [1, -1, 1]
+}
+
+const p1 = {
+    type: 1,
+    input_voltage: [1, -1, 0.1],
+    input_current: [1, -1, .05],
+    input_frequency: [1, -1, 0.8]
+}
+
+const p3 = {
+    type: 3,
+    input_voltage_l1: [1, -1, 0],
+    input_voltage_l2: [1, -1, 0],
+    input_voltage_l3: [1, -1, 0],
+    input_current_l1: [1, -1, 0],
+    input_current_l2: [1, -1, 0],
+    input_current_l3: [1, -1, 0],
+    input_frequency_l1: [1, -1, 0],
+    input_frequency_l2: [1, -1, 0],
+    input_frequency_l3: [1, -1, 0]
+}
+
+const POWER = {
+    power1: Object.assign(p1, powerDefault),
+    power3: Object.assign(p3, powerDefault)
+}
 
 
 /*
@@ -189,11 +206,11 @@ IO
 */
 
 const IO = {
-    name:'io',
-    devid:0,
-    brand:'io',
-    power_status:true,
-    input_status:false
+    name: 'io',
+    devid: 0,
+    brand: 'io',
+    power_status: true,
+    input_status: false
 }
 
 /*  
@@ -201,11 +218,11 @@ const IO = {
 温度、湿度
  */
 const TH = {
-    name:'Temperature humidity',
-    devid:0,
-    brand:'th',
-    temperature:27,
-    humidity:80
+    name: 'Temperature humidity',
+    devid: 0,
+    brand: 'th',
+    temperature: 27,
+    humidity: 80
 }
 
-export {UPS,AIR_COOL,POWER,IO,TH}
+export { UPS, AIR_COOL, POWER, IO, TH }

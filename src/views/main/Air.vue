@@ -1,104 +1,125 @@
 <template>
-    <keep-alive>
-        <el-row>
-            <el-col :span="24" v-for="(item, index) in airs" :key="index">
-                <strong>{{item.name}}/Devid:{{item.devid}}</strong>
-                <div></div>
-                <strong>mode:{{arg.status[item.name]?arg.status[item.name].mode:'no'}}/brand:{{arg.status[item.name]?arg.status[item.name].brand:'no'}}/</strong>
-                <hr/>
-                <ve-line :data="serizeData(item)" height="500px"  :settings="chartSettings"></ve-line>
-            </el-col>
-
-        </el-row>
-    </keep-alive>
+  <keep-alive>
+    <el-row>
+      <el-col :span="24" v-for="(item, index) in airs" :key="index">
+        <hr />
+        <el-col :span="24">
+          <h4>{{lang.Devid}}:</h4>
+          <p>{{item.devid}}</p>
+        </el-col>
+        <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
+          <h4>{{lang[val]}}:</h4>
+          <p>{{item[val]?item[val]:item.arg[val]}}</p>
+        </el-col>
+        <div>
+          <el-col :span="4" v-for="(val,key) in arr_gress" :key="key">
+            <div v-for="(v1,id,k1) in val" :key="k1" v-if="item.arg[id]">
+              <h4>{{lang[id]}}:{{v1}}</h4>
+              <ProgressDashboard :num="item.arg[id]" :unit="v1" :multip='multip'></ProgressDashboard>
+            </div>
+          </el-col>
+        </div>
+        <ve-line
+          :data="{columns:item.titles,rows:item.args}"
+          class="line"
+          :settings="chartSettings"
+        ></ve-line>
+      </el-col>
+    </el-row>
+  </keep-alive>
 </template>
 
 <script>
+import ProgressDashboard from "./util/Progress_dashboard";
 export default {
-    data(){
-        return{
-            arg:{
-                keyarr:[],
-                status:{
-
-                }
-            },
-            chartSettings:{
-                dimension: ['date'], //指定date 为维度
-                metrics:["refrigeration_temperature",
-                        "refrigeration_stop_deviation",
-                        "evaporation_start_temperature",
-                        "air_change_time",
-                        "opening_delay",
-                        "high_temperature_alarm_point",
-                        "return_air_temperature",
-                        "coil_temperature",
-                        "modified_return_air_temperature",
-                        "Correct_air_outlet_temperature",
-                        "defrosting_temperature_setting",
-                        "heating_opening_deviation",
-                        "heating_stop_deviation",
-                        "refrigeration_start_deviation",
-                        "air_outlet_temperature_deviation",
-                        "Starting_temperature_setting",
-                        "temperature_difference",
-                        "air_supply_temperature",
-                ],
-                labelMap: {
-                    refrigeration_temperature: '制冷温度',
-                    refrigeration_stop_deviation: '制冷停止偏差',
-                    evaporation_start_temperature:'蒸发开启温度',
-                    air_change_time:'换气时间',
-                    opening_delay:'开度延时',
-                    high_temperature_alarm_point:'高温报警点',
-                    return_air_temperature:'回风温度',
-                    coil_temperature:'盘管温度',
-                    modified_return_air_temperature:'修正回风温度',
-                    Correct_air_outlet_temperature:'修正出风温度',
-                    defrosting_temperature_setting:'除霜温度设定',
-                    heating_opening_deviation:'加热开启偏差',
-                    heating_stop_deviation:'加热停止偏差',
-                    refrigeration_start_deviation:'制冷开启偏差',
-                    air_outlet_temperature_deviation:'出风温度偏差',
-                    Starting_temperature_setting:'开机温保设定',
-                    temperature_difference:'温差',
-                    air_supply_temperature:'送风温度'
-                    }
-            }
-        }
+  data() {
+    return {
+      multip:1,
+      arr_title: [
+        "name",
+        "brand",
+        "mode",
+        "refrigeration_stop_deviation",
+        "opening_delay",
+        "high_temperature_alarm_point",
+        "modified_return_air_temperature",
+        "Correct_air_outlet_temperature",
+        "Correct_air_outlet_temperature",
+        "defrosting_temperature_setting",
+        "heating_opening_deviation",
+        "heating_stop_deviation",
+        "refrigeration_start_deviation",
+        "air_outlet_temperature_deviation",
+        "Starting_temperature_setting"
+      ],
+      arr_gress: [
+        {air_change_time:'s'},
+        { refrigeration_temperature: "C" },
+        { evaporation_start_temperature: "C" },
+        { return_air_temperature: "C" },
+        { coil_temperature: "C" },
+        { temperature_difference: "C" },
+        { air_supply_temperature: "C" }
+      ],
+      chartSettings: {
+        dimension: ["date"], //指定date 为维度
+        metrics: [
+          "refrigeration_temperature",
+          "refrigeration_stop_deviation",
+          "evaporation_start_temperature",
+          "air_change_time",
+          "opening_delay",
+          "high_temperature_alarm_point",
+          "return_air_temperature",
+          "coil_temperature",
+          "modified_return_air_temperature",
+          "Correct_air_outlet_temperature",
+          "defrosting_temperature_setting",
+          "heating_opening_deviation",
+          "heating_stop_deviation",
+          "refrigeration_start_deviation",
+          "air_outlet_temperature_deviation",
+          "Starting_temperature_setting",
+          "temperature_difference",
+          "air_supply_temperature"
+        ],
+      }
+    };
+  },
+  components: {
+    ProgressDashboard
+  },
+  computed: {
+    airs() {
+      if (typeof this.$store.state.dev.data == "undefined") {
+        return { air_cool: [] };
+      }
+      return this.$store.state.dev.data.air_cool;
     },
-    computed:{
-        airs(){
-            if(typeof(this.$store.state.dev.data) == 'undefined'){
-                return {air_cool:[]}
-            }
-            return this.$store.state.dev.data.air_cool
-        },
-    },
-    methods:{
-        serizeData(item){
-            var arg = item.arg
-            if (this.arg.keyarr.length < 1 && typeof(arg) == 'object'){
-                for (var key in arg[0]){                    
-                    this.arg.keyarr.push(key)
-                }
-            } 
-            if(typeof(arg) == 'object'){
-                var n = arg.length-1
-                var status = {
-                    mode:arg[n].mode,
-                    brand:arg[n].brand                    
-                }
-                this.arg.status[item.name] = status
-            }               
-            var data = {columns:this.arg.keyarr,rows:arg}
-
-            return data            
-        }
+    lang() {
+      return this.$store.getters.language;
     }
-}
+  },
+  methods: {},
+  mounted() {
+    this.$nextTick().then(() => {
+      var labelMap = {};
+      for (var i of this.chartSettings.metrics) {
+        labelMap[i] = this.lang[i];
+      }
+      this.chartSettings.labelMap = labelMap;
+    });
+  }
+};
 </script>
 
 <style scoped>
-
+h4,
+p {
+  display: inline-block;
+}
+.line {
+  height: -webkit-fill-available;
+  margin-top: 800px;
+}
 </style>

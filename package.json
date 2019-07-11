@@ -1,8 +1,8 @@
 {
   "name": "vueadmin",
-  "version": "1.0.5",
-  "description": "vue admin project",
-  "author": "taylor <709161610@qq.com>",
+  "version": "0.1.0",
+  "description": "ladis admin project",
+  "author": "wgcairui@icloud.com",
   "license": "MIT",
   "scripts": {
     "dev": "node build/dev-server.js",
@@ -66,8 +66,8 @@
     "webpack-merge": "^2.6.1"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": "> 4.0.0",
+    "npm": "> 3.0.0"
   },
   "browserslist": [
     "> 1%",
