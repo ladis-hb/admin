@@ -34,7 +34,101 @@ const langDefault = {
     date:{
         en:'DateTime',
         cn:'时间'
+    },
+    Equipment_overview:{
+        en:'Equipment overview',
+        cn:'设备概览'
+    },
+    info:{
+        en:'info',
+        cn:'信息'
+    },
+    setting:{
+        en:'setting',
+        cn:'设置'
+    },
+    air_conditioning:{
+        en:'air conditioning',
+        cn:'空调'
+    },
+    air_cool:{
+        en:'air conditioning',
+        cn:'空调'
+    },
+    Electricity_meter:{
+        en:'Electricity meter',
+        cn:'电量仪'
+    },
+    power:{
+        en:'Electricity meter',
+        cn:'电量仪'
+    },
+    Temperature_humidity:{
+        en:'Temperature&humidity',
+        cn:' 温湿度'
+    },
+    th:{
+        en:'Temperature&humidity',
+        cn:' 温湿度'
+    },
+    UPS:{
+        en:'UPS',
+        cn:'UPS'
+    },
+    ups:{
+        en:'UPS',
+        cn:'UPS'
+    },
+    io:{
+        en:'IO',
+        cn:'IO'
+    },
+    login:{
+        en:'login',
+        cn:'登录'
+    },
+    language:{
+        cn:'language',
+        en:'中文'
+    },
+    high:{
+        en:'high',
+        cn:'上限'
+    },
+    low:{
+        en:'low',
+        cn:'下限'
+    },
+    now:{
+        en:'now',
+        cn:'当前'
+    },
+    loginout:{
+        en:'loginout',
+        cn:'退出登录'
+    },
+    login:{
+        en:'login',
+        cn:'登录'
+    },
+    Confirm_exit:{
+        en:'Confirm your exit?',
+        cn:'确认退出吗?'
+    },
+    tip:{
+        en:'tip',
+        cn:'提示'
+    },
+    yes:{
+        en:'yes',
+        cn:'是'
+    },
+    no:{
+        en:'no',
+        cn:'否'
     }
+
+
 }
 
 const ups = {

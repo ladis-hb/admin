@@ -3,27 +3,31 @@
     <keep-alive>
       <el-row>
         <el-col :span="24">
-          <el-card class="all-x">
-            <!-- ups -->
-            <div v-for="(item,key) in devinfo" :key="key" >
-              <h3>{{key}}</h3>
-              <hr />
-              <el-table :data="item" style="width: 100%">
-                <el-table-column label type="expand">
-                  <template slot-scope="props">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                      <el-form-item :label="lang[li]" v-for="(li,ikey) in list[key].li" :key="ikey">
-                        <span>{{ props.row[li]? props.row[li]: props.row.arg[li] }}</span>
-                      </el-form-item>
-                    </el-form>
-                  </template>
-                </el-table-column>
-                <el-table-column :label="lang[ul]" :prop="ul" v-for="(ul,iikey) in list[key].ul" :key="iikey"></el-table-column>
-                
-              </el-table>
-            </div>
-           
-          </el-card>
+          <!-- <el-card class="all-x"> -->
+          <!-- ups -->
+          <div v-for="(item,key) in devinfo" :key="key">
+            <h3>{{lang[key]}}</h3>
+            <hr />
+            <el-table :data="item" style="width: 100%">
+              <el-table-column label type="expand">
+                <template slot-scope="props">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                    <el-form-item :label="lang[li]" v-for="(li,ikey) in list[key].li" :key="ikey">
+                      <span>{{ props.row[li]? props.row[li]: props.row.arg[li] }}</span>
+                    </el-form-item>
+                  </el-form>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="lang[ul]"
+                :prop="ul"
+                v-for="(ul,iikey) in list[key].ul"
+                :key="iikey"
+              ></el-table-column>
+            </el-table>
+          </div>
+
+          <!--  </el-card> -->
         </el-col>
 
         <log :infodata="warringinfo" type="error"></log>
@@ -34,7 +38,7 @@
 </template>
 
 <script>
-import { getDevInfo, getWarringInfo, getLog } from "../api/api";
+
 import log from "./log/log.vue";
 export default {
   data() {
@@ -43,7 +47,7 @@ export default {
       loading: false,
       list: {
         ups: {
-          ul: ["name", "devid", "brand", "status", "load_ratio", "date"],
+          ul: ["name", "devid", "brand", "date"],
           li: [
             "name",
             "brand",
@@ -68,7 +72,7 @@ export default {
           ]
         },
         air_cool: {
-          ul: ["name", "devid", "brand", "status", "mode", "date"],
+          ul: ["name", "devid", "brand", "date"],
           li: [
             "name",
             "devid",
@@ -97,7 +101,7 @@ export default {
           ]
         },
         power: {
-          ul: ["name", "devid", "brand", "power_factor", "quantity", "date"],
+          ul: ["name", "devid", "brand", "date"],
           li: [
             "name",
             "devid",
@@ -124,14 +128,7 @@ export default {
           ]
         },
         io: {
-          ul: [
-            "name",
-            "devid",
-            "brand",
-            "power_status",
-            "input_status",
-            "date"
-          ],
+          ul: ["name", "devid", "brand", "date"],
           li: [
             "name",
             "devid",
@@ -143,7 +140,7 @@ export default {
           ]
         },
         th: {
-          ul: ["name", "devid", "brand", "temperature", "humidity", "date"],
+          ul: ["name", "devid", "brand", "date"],
           li: [
             "name",
             "devid",
@@ -175,39 +172,19 @@ export default {
     },
     lang() {
       return this.$store.getters.language;
+    },
+    interval_time(){
+      return this.$store.state.interval_time
     }
   },
   methods: {
-    show(ul){
-      console.log(ul)
-      return ul
+    show(ul) {
+      console.log(ul);
+      return ul;
     },
-    getdevinfo() {
-      getDevInfo({ id: 3 }).then(data => {
-        this.$store.commit("SETDEV", { data: data.data });
-      });
-    },
-    getwarring() {
-      getWarringInfo().then(data => {
-        this.$store.commit("SETWARRING", { data: data.data });
-      });
-    },
-    getinfo() {
-      getLog().then(data => {
-        this.$store.commit("SETLOG", { data: data.data });
-      });
-    },
-    interval() {
-      this.getdevinfo();
-      this.getwarring();
-      this.getinfo();
-      this.$notify({ message: "已更新数据！！！", position: "bottom-right" });
-      this.loading = false;
-    }
   },
   mounted() {
-    setInterval(this.interval, 15000);
-    this.interval();
+    
   }
 };
 </script>

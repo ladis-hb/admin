@@ -7,27 +7,60 @@
       </el-col>
       <el-col :span="20" class="header-main">
         <el-col :span="2" class="hidden-icon">
-          <i class="el-icon-menu" @click="asidCollapsed"></i>
+          <i class="iconfont icon-liebiaomoshi_kuai" @click="asidCollapsed"></i>
         </el-col>
         <el-col :span="22" class="hm-main">
-          <a src="#" class="hm-a">news</a>
+          <a src="#" class="hm-a">
+            <i class="iconfont icon-xinwen"></i> news
+          </a>
           <div class="hm-drop">
             <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ path: '/test' }">信息</el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/setting'}">设置</el-breadcrumb-item>
+              <el-breadcrumb-item :to="{ path: '/test' }">
+                <i class="iconfont icon-xiaoxi"></i>
+                <span>{{lang.info}}</span>
+              </el-breadcrumb-item>
+              <el-breadcrumb-item :to="{path:'/setting'}">
+                <i class="iconfont icon-icon_shezhi"></i>
+                <span>{{lang.setting}}</span>
+              </el-breadcrumb-item>
               <el-breadcrumb-item>
                 <el-dropdown>
                   <span>
-                    language
+                    {{lang.language}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu split-button slot="dropdown">
-                    <el-dropdown-item>中文</el-dropdown-item>
-                    <el-dropdown-item>English</el-dropdown-item>
+                    <el-dropdown-item>
+                      <div @click="Setlanguage('cn')">
+                        <i class="iconfont icon-zhongwen"></i>
+                        <span>CN</span>
+                      </div>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
+                      <div @click="Setlanguage('en')">
+                        <i class="iconfont icon-yingwen"></i>
+                        <span>EN</span>
+                      </div>
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-breadcrumb-item>
-              <el-breadcrumb-item :to="{ path: '/test' }">{{sysUserName}}</el-breadcrumb-item>
+              <el-breadcrumb-item>
+                <el-dropdown>
+                  <span>
+                    {{sysUserName}}
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu split-button slot="dropdown">
+                    <el-dropdown-item>
+                      <div @click="logout">
+                        <i class="el-icon-lock"></i>
+                        <span>{{lang.loginout}}</span>
+                      </div>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-breadcrumb-item>
             </el-breadcrumb>
           </div>
           <div class="hm-user">
@@ -37,13 +70,12 @@
       </el-col>
     </el-col>
     <el-col :span="24" class="main">
-      <aside  :class="{asid:!asidCollapse}">
+      <aside :class="{asid:!asidCollapse}">
         <!--导航菜单-->
 
         <el-menu
           :default-active="$route.path"
           class="el-menu-vertical-demo"
-          
           @open="handleopen"
           @close="handleclose"
           @select="handleselect"
@@ -53,8 +85,8 @@
           :show-timeout="6000"
         >
           <el-menu-item @click="toMain">
-            <i class="fa fa-home" />
-            <span>概览</span>
+            <i class="iconfont icon-shebeizhuangtai" />
+            <span>{{lang.Equipment_overview}}</span>
           </el-menu-item>
           <el-menu-item
             v-for="(item,index) in $router.options.routes"
@@ -62,11 +94,11 @@
             :index="item.children[0].path"
             :key="index"
           >
-            <i :class="item.iconCls"></i>
-            <span>{{item.children[0].name}}</span>
+            <i :class="item.children[0].iconCls"></i>
+            <span>{{lang[item.children[0].name]}}</span>
           </el-menu-item>
 
-          <el-submenu
+          <!-- <el-submenu
             v-for="(item,index) in $router.options.routes"
             :index="item.path"
             :key="random*index"
@@ -82,20 +114,24 @@
               :index="child.path"
               :key="key+random"
             >{{child.name}}</el-menu-item>
-          </el-submenu>
+          </el-submenu>-->
         </el-menu>
       </aside>
       <section class="content-container">
         <div class="grid-content bg-purple-light">
           <el-col :span="24" class="breadcrumb-container">
-            <strong class="title">{{$route.name}}</strong>
+            <strong class="title">{{lang[$route.name]}}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
-              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">{{ item.name }}</el-breadcrumb-item>
+              <el-breadcrumb-item
+                v-for="item in $route.matched"
+                :key="item.path"
+              >{{ lang[item.name] }}</el-breadcrumb-item>
             </el-breadcrumb>
           </el-col>
+          <!-- Main -->
           <el-col :span="24" class="content-wrapper">
             <transition name="fade" mode="out-in">
-              <router-view></router-view>
+              <router-view class="main-view"></router-view>
             </transition>
           </el-col>
         </div>
@@ -105,11 +141,12 @@
 </template>
 
 <script>
+import { getDevInfo, getWarringInfo, getLog } from "../api/api";
 export default {
   data() {
     return {
-      asidCollapse:false,
-      asidClass:['asid'],
+      asidCollapse: false,
+      asidClass: ["asid"],
       collapsed: false,
       sysUserName: "",
       sysUserAvatar: "",
@@ -131,9 +168,19 @@ export default {
     },
     random() {
       return this.$store.state.random;
+    },
+    lang() {
+      return this.$store.getters.language;
+    },
+    interval_time(){
+      return this.$store.state.interval_time
     }
   },
   methods: {
+    Setlanguage(lang) {
+      console.log(lang);
+      this.$store.commit("SETlanguage", { data: lang });
+    },
     toMain() {
       this.$router.push("/main");
     },
@@ -150,30 +197,57 @@ export default {
     //退出登录
     logout: function() {
       var _this = this;
-      this.$confirm("确认退出吗?", "提示", {
-        //type: 'warning'
+      this.$confirm(this.lang.Confirm_exit, this.lang.tip, {
+        confirmButtonText: this.lang.yes,
+        cancelButtonText: this.lang.no,
+        type: "warning"
       })
         .then(() => {
+          this.$emit('clearinterval')
           sessionStorage.removeItem("user");
+          
           _this.$router.push("/login");
         })
         .catch(() => {});
     },
     collapse: function() {
       this.asidCollapse = !this.asidCollapse;
-      
     },
-    showMenu(i, status) {
-      this.$refs.menuCollapsed.getElementsByClassName(
-        "submenu-hook-" + i
-      )[0].style.display = status ? "block" : "none";
+    //
+    asidCollapsed() {
+      this.asidCollapse = !this.asidCollapse;
     },
-    asidCollapsed(){
-      this.asidCollapse = !this.asidCollapse
-
+    ///
+    getdevinfo() {
+      getDevInfo({ id: 3 }).then(data => {
+        this.$store.commit("SETDEV", { data: data.data });
+      });
+    },
+    getwarring() {
+      getWarringInfo().then(data => {
+        this.$store.commit("SETWARRING", { data: data.data });
+      });
+    },
+    getinfo() {
+      getLog().then(data => {
+        this.$store.commit("SETLOG", { data: data.data });
+      });
+    },
+    interval_event() {
+      this.getdevinfo();
+      this.getwarring();
+      this.getinfo();
+      this.$notify({ message: "已更新数据！！！", position: "bottom-right" });
+      this.loading = false;
     }
   },
   mounted() {
+    var interval = setInterval(this.interval_event, this.interval_time);
+    this.interval_event();
+    this.$once('clearinterval',()=>{
+      clearInterval(interval)
+    })
+
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -200,10 +274,10 @@ export default {
   }
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width:100%;
-    min-height: 400px;
-  }
-.asid{
+  width: 100%;
+  min-height: 400px;
+}
+.asid {
   flex: 0 0 16.66667%;
   width: 16.66667%;
 }
@@ -212,6 +286,13 @@ export default {
   top: 0px;
   bottom: 0px;
   width: 100%;
+  span {
+    font-size: 1rem;
+    padding-left: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .header {
     height: 60px;
     line-height: 60px;
@@ -244,13 +325,15 @@ export default {
     justify-content: center;
     .hidden-icon {
       margin-right: 1rem;
-      i{
+      max-height: 60px;
+      i {
         margin-left: 1rem;
       }
     }
     .hm-main {
       display: flex;
       align-items: center;
+      max-height: 60px;
       .hm-a {
         margin-right: 1rem;
       }
@@ -261,6 +344,7 @@ export default {
       }
       .hm-user {
         margin-left: 1rem;
+        max-height: 60px;
         img {
           margin-right: 6px;
           margin-top: 6px;
@@ -270,6 +354,9 @@ export default {
       }
     }
   }
+  .main-view {
+    padding: 0rem 2rem;
+  }
   //main
   .main {
     display: flex;
@@ -277,6 +364,7 @@ export default {
     top: 60px;
     bottom: 0px;
     overflow: hidden;
+
     aside {
       .el-menu {
         height: 100%;
@@ -326,7 +414,6 @@ export default {
     }
   }
 }
-
 
 .breadcrumb {
   font-size: 16px;

@@ -13,6 +13,8 @@ const state = {
     //language
     language,
     lang: 'cn',
+    //setting
+    interval_time: 20000,
     // dev data
     dev: {
         ups: [],
@@ -37,6 +39,14 @@ const getters = {
 }
 // 定义所需的 mutations
 const mutations = {
+    //set interval
+    SETinterval(state, data) {
+        state.interval_time = (isNaN(data.data) ? 20000 : data.data * 10000)
+    },
+    //set language
+    SETlanguage(state, data) {
+        state.lang = data.data
+    },
 
     // set dev
     SETDEV(state, data) {
@@ -69,11 +79,11 @@ const mutations = {
                 //如果i == power，序列化arg.x[1,-1,0] == arg.x[0]
                 if (i == 'power') {
                     let metrics = [
-                         "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
+                        "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
                         "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
                         "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
                         "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
-                    let Powerobj = {date:arg.date}
+                    let Powerobj = { date: arg.date }
                     for (var iii of metrics) {
                         Powerobj[iii] = arg.arg[iii] ? arg.arg[iii][2] : 0
                     }
@@ -83,13 +93,9 @@ const mutations = {
                 } else {
                     state.dev.data[i][ii].args.push(arg.arg)
                 }
-                //state.dev.data[i][ii].args.push(arg.arg)
                 state.dev.data[i][ii] = Object.assign(dev, obj)
             }
-
         }
-
-
     },
     //set warring
     SETWARRING(state, data) {

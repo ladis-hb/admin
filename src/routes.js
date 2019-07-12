@@ -29,7 +29,7 @@ let routes = [
         name: 'main',
         hidden: true,
         children: [
-            { path: '/main', name: '设备概览', component: Main }
+            { path: '/main', name: 'main', component: Main }
         ]
     },
 
@@ -40,9 +40,9 @@ let routes = [
         component: Home,
         name: 'UPS',
         leaf: true,
-        iconCls: ['fa', 'fa-battery-full'],
+        iconCls: ['iconfont', 'icon-upsdianyuan'],
         children: [
-            { path: '/ups', component: UPS, name: 'ups', iconCls: ['fa', 'fa-battery-full'] }
+            { path: '/ups', component: UPS, name: 'UPS', iconCls: ['iconfont', 'icon-upsdianyuan'] }
         ]
     },
 
@@ -53,10 +53,10 @@ let routes = [
         path: '/',
         component: Home,
         name: 'Cool',
-        iconCls: ["fa", " fa-snowflake-o"],
+        iconCls: ['iconfont', 'icon-kongdiao'],
         leaf: true,
         children: [
-            { path: '/cool', component: Air, name: '空调', iconCls: ["fa", " fa-snowflake-o"] }
+            { path: '/cool', component: Air, name: 'air_conditioning', iconCls: ['iconfont', 'icon-kongdiao'] }
         ]
     },
 
@@ -67,12 +67,11 @@ let routes = [
         path: '/',
         name: 'Power',
         component: Home,
-        iconCls: ["fa", "fa-plug"],
+        iconCls: ['iconfont', 'icon-dianliangyi'],
         leaf: true,
         children: [
-            { path: '/power', name: '电量仪', component: POWER, iconCls: ["fa", "fa-plug"] }
-            /* { path: '/power1', name: '电量仪单项', component: POWER },
-            { path: '/power3', name: '电量仪三项', component: POWER } */
+            { path: '/power', name: 'Electricity_meter', component: POWER, iconCls: ['iconfont', 'icon-dianliangyi'] }
+
         ]
     },
 
@@ -84,9 +83,9 @@ let routes = [
         name: 'IO',
         component: Home,
         leaf: true,
-        iconCls: ["fa", " fa-deaf"],
+        iconCls: ['iconfont', 'icon-io'],
         children: [
-            { path: '/io', name: 'io', component: IO, iconCls: ["fa", " fa-deaf"] }
+            { path: '/io', name: 'io', component: IO, iconCls: ['iconfont', 'icon-io'] }
         ]
     },
     /* 
@@ -97,14 +96,14 @@ let routes = [
         name: 'Temperature humidity',
         component: Home,
         leaf: true,
-        iconCls: ["fa", " fa-thermometer-empty"],
+        iconCls: ['iconfont', 'icon-wenshidu'],
         children: [
-            { path: '/Temperature-humidity', name: '温湿度', component: TH, iconCls: ["fa", " fa-thermometer-empty"] }
+            { path: '/Temperature-humidity', name: 'Temperature_humidity', component: TH, iconCls: ['iconfont', 'icon-wenshidu'] }
         ]
     },
-   
 
-    { path: '/test', name: 'TEST', component: TEST, hidden: true,iconCls: ["fa", " fa-thermometer-empty"] },
+
+    { path: '/test', name: 'TEST', component: TEST, hidden: true, iconCls: ["fa", " fa-thermometer-empty"] },
 
 
 

@@ -168,6 +168,7 @@ const powerDefault = {
     name: 'power',
     devid: 0,
     brand: 'power',
+    status:'true',
     active_power: [10, 1, 99],
     reactive_power: [100, 2, 3],
     power_factor: [99, 3, 5],

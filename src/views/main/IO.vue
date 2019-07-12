@@ -3,6 +3,7 @@
     <el-row>
       <el-col :span="24" v-for="(item, index) in airs" :key="index" class="card">
         <hr />
+        <div class="div-block">
         <el-col :span="24">
           <h4>{{lang.Devid}}:</h4>
           <p>{{item.devid}}</p>
@@ -11,7 +12,8 @@
           <h4>{{lang[val]}}:</h4>
           <p>{{item[val]?item[val]:item.arg[val]}}</p>
         </el-col>
-        <div>
+        </div>
+        <div class="div-block">
           <el-col :span="12" v-for="(val,key) in arr_gress" :key="key">
             <h4>{{lang[val]}}:</h4>
             <i :class="item[val]?el_icon_open:el_icon_turn_off"></i>
@@ -49,6 +51,12 @@ export default {
 </script>
 
 <style scoped>
+.div-block {
+  width: 100%;
+  overflow: auto;
+  border-bottom-style: inset;
+  /* padding-top: 1rem; */
+}
 .all-x {
   width: max-width;
   margin-top: 15px;

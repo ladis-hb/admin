@@ -9,16 +9,19 @@ import './assets/theme/theme-green/index.css'
 import VueRouter from 'vue-router'
 import store from './vuex/store'
 import Vuex from 'vuex'
-import Vcharts from 'v-charts'
+//import Vcharts from 'v-charts'
+import VeLine from 'v-charts/lib/line'
 import routes from './routes'
 import Mock from './mock'
 Mock.bootstrap();
-import 'font-awesome/css/font-awesome.min.css'
+//import 'font-awesome/css/font-awesome.min.css'
+import './assets/iconfont/iconfont.css'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
-Vue.use(Vcharts)
+//Vue.use(Vcharts)
+Vue.component(VeLine.name,VeLine)
 
 //NProgress.configure({ showSpinner: false });
 

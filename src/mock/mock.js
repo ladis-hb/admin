@@ -28,9 +28,10 @@ export default {
       let { username, password } = JSON.parse(config.data);
       return new Promise((resolve, reject) => {
         let user = null;
+        //console.log( otad(password))
         setTimeout(() => {
           let hasUser = LoginUsers.some(u => {
-            if (u.username === username && u.password === password) {
+            if (u.username === username && u.password === otad(password)) {
               user = JSON.parse(JSON.stringify(u));
               user.password = undefined;
               return true;
@@ -43,6 +44,13 @@ export default {
             resolve([200, { code: 500, msg: '账号或密码错误' }]);
           }
         }, 1000);
+        //解码password
+        function otad (str) { 
+          var s = window.atob(str)
+          var arr = s.split('')
+          for( var i=1;i<10;i++) arr.pop()
+          return arr.join('')
+         }
       });
     });
 

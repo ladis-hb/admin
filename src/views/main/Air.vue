@@ -3,27 +3,25 @@
     <el-row>
       <el-col :span="24" v-for="(item, index) in airs" :key="index">
         <hr />
-        <el-col :span="24">
-          <h4>{{lang.Devid}}:</h4>
-          <p>{{item.devid}}</p>
-        </el-col>
-        <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
-          <h4>{{lang[val]}}:</h4>
-          <p>{{item[val]?item[val]:item.arg[val]}}</p>
-        </el-col>
-        <div>
-          <el-col :span="4" v-for="(val,key) in arr_gress" :key="key">
+        <div class="div-block">
+          <el-col :span="24">
+            <h4>{{lang.Devid}}:</h4>
+            <p>{{item.devid}}</p>
+          </el-col>
+          <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
+            <h4>{{lang[val]}}:</h4>
+            <p>{{item[val]?item[val]:item.arg[val]}}</p>
+          </el-col>
+        </div>
+        <div class="div-block">
+          <el-col :span="6" v-for="(val,key) in arr_gress" :key="key">
             <div v-for="(v1,id,k1) in val" :key="k1" v-if="item.arg[id]">
               <h4>{{lang[id]}}:{{v1}}</h4>
-              <ProgressDashboard :num="item.arg[id]" :unit="v1" :multip='multip'></ProgressDashboard>
+              <ProgressDashboard :num="item.arg[id]" :unit="v1" :multip="multip"></ProgressDashboard>
             </div>
           </el-col>
         </div>
-        <ve-line
-          :data="{columns:item.titles,rows:item.args}"
-          class="line"
-          :settings="chartSettings"
-        ></ve-line>
+        <ve-line :data="{columns:item.titles,rows:item.args}" class :settings="chartSettings"></ve-line>
       </el-col>
     </el-row>
   </keep-alive>
@@ -34,7 +32,7 @@ import ProgressDashboard from "./util/Progress_dashboard";
 export default {
   data() {
     return {
-      multip:1,
+      multip: 1,
       arr_title: [
         "name",
         "brand",
@@ -53,7 +51,7 @@ export default {
         "Starting_temperature_setting"
       ],
       arr_gress: [
-        {air_change_time:'s'},
+        { air_change_time: "s" },
         { refrigeration_temperature: "C" },
         { evaporation_start_temperature: "C" },
         { return_air_temperature: "C" },
@@ -82,7 +80,7 @@ export default {
           "Starting_temperature_setting",
           "temperature_difference",
           "air_supply_temperature"
-        ],
+        ]
       }
     };
   },
@@ -114,12 +112,14 @@ export default {
 </script>
 
 <style scoped>
+.div-block {
+  width: 100%;
+  overflow: auto;
+  border-bottom-style: inset;
+  /* /*padding-top: 1rem; */
+}
 h4,
 p {
   display: inline-block;
-}
-.line {
-  height: -webkit-fill-available;
-  margin-top: 800px;
 }
 </style>
