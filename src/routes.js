@@ -9,8 +9,9 @@ const IO = () => import('@/views/main/IO')
 const TH = () => import('@/views/main/TH')
 const UPS = () => import('@/views/main/UPS')
 const POWER = () => import('@/views/main/POWER')
-
-const TEST = () => import('./views/main/test')
+const SETTING = () => import('@/views/Setting')
+const INFO = () => import('@/views/Info')
+ 
 let routes = [
     //login
     {
@@ -40,6 +41,20 @@ let routes = [
         name: 'Registered',
         hidden: true
 
+    },
+    //Setting
+    {
+        path:'/Setting',
+        component:SETTING,
+        name:'Setting',
+        hidden:true
+    },
+    //INFO
+    {
+        path:'/Info',
+        component:INFO,
+        name:'Info',
+        hidden:true
     },
 
     //main page

@@ -126,6 +126,14 @@ const langDefault = {
     no:{
         en:'no',
         cn:'否'
+    },
+    reset:{
+        en:'reset',
+        cn:'重置'
+    },
+    password:{
+        en:'password',
+        cn:'密码'
     }
 
 

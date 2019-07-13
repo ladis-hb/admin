@@ -4,6 +4,7 @@
       <el-col :span="24" v-for="(item, index) in airs" :key="index">
         <hr />
         <div class="div-block">
+          <i class="iconfont icon-shebeizhuangtai" style="display: block"></i>
           <el-col :span="24">
             <h4>{{lang.Devid}}:</h4>
             <p>{{item.devid}}</p>
@@ -14,6 +15,7 @@
           </el-col>
         </div>
         <div class="div-block">
+          <i class="iconfont icon-yibiaopan" style="display: block"></i>
           <el-col :span="12" v-for="(val,key) in arr_gress" :key="key">
             <div v-for="(v1,id,k1) in val" :key="k1" v-if="item.arg[id]">
               <h4>{{lang[id]}}:{{v1}}</h4>
@@ -21,7 +23,7 @@
             </div>
           </el-col>
         </div>
-
+        <i class="iconfont icon-tubiao-zhexiantu"></i>
         <ve-line
           :data="{columns:item.titles,rows:item.args}"
           class="line"

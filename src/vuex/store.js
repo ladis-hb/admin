@@ -41,7 +41,7 @@ const getters = {
 const mutations = {
     //set interval
     SETinterval(state, data) {
-        state.interval_time = (isNaN(data.data) ? 20000 : data.data * 10000)
+        state.interval_time = (isNaN(data) ? 20000 : data * 1000)
     },
     //set language
     SETlanguage(state, data) {

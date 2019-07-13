@@ -15,19 +15,19 @@
           </a>
           <div class="hm-drop">
             <el-breadcrumb separator="/">
-              <el-breadcrumb-item :to="{ path: '/test' }">
-                <i class="iconfont icon-xiaoxi"></i>
-                <span>{{lang.info}}</span>
+              <el-breadcrumb-item :to="{ path: '/Info' }">
+                <i class="iconfont icon-xiaoxi text-color"></i>
+                <span class="text-color">{{lang.info}}</span>
               </el-breadcrumb-item>
-              <el-breadcrumb-item :to="{path:'/setting'}">
-                <i class="iconfont icon-icon_shezhi"></i>
-                <span>{{lang.setting}}</span>
+              <el-breadcrumb-item :to="{path:'/Setting'}">
+                <i class="iconfont icon-icon_shezhi text-color"></i>
+                <span class="text-color">{{lang.setting}}</span>
               </el-breadcrumb-item>
               <el-breadcrumb-item>
                 <el-dropdown>
-                  <span>
+                  <span class="text-color" >
                     {{lang.language}}
-                    <i class="el-icon-arrow-down el-icon--right"></i>
+                    <i class="el-icon-arrow-down el-icon--right text-color"></i>
                   </span>
                   <el-dropdown-menu split-button slot="dropdown">
                     <el-dropdown-item>
@@ -47,17 +47,23 @@
               </el-breadcrumb-item>
               <el-breadcrumb-item>
                 <el-dropdown>
-                  <span>
+                  <span class="text-color">
                     {{sysUserName}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu split-button slot="dropdown">
                     <el-dropdown-item>
+                      <div @click="ResetPw">
+                        <i class="iconfont icon-miwen"></i>
+                        <span>{{lang.reset}}{{lang.password}}</span>
+                      </div>
+                    </el-dropdown-item>
+                    <el-dropdown-item>
                       <div @click="logout">
                         <i class="el-icon-lock"></i>
                         <span>{{lang.loginout}}</span>
                       </div>
-                    </el-dropdown-item>
+                    </el-dropdown-item>                    
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-breadcrumb-item>
@@ -76,9 +82,6 @@
         <el-menu
           :default-active="$route.path"
           class="el-menu-vertical-demo"
-          @open="handleopen"
-          @close="handleclose"
-          @select="handleselect"
           unique-opened
           router
           :collapse="asidCollapse"
@@ -97,24 +100,6 @@
             <i :class="item.children[0].iconCls"></i>
             <span>{{lang[item.children[0].name]}}</span>
           </el-menu-item>
-
-          <!-- <el-submenu
-            v-for="(item,index) in $router.options.routes"
-            :index="item.path"
-            :key="random*index"
-            v-if="!item.leaf && !item.hidden"
-          >
-            <template slot="title">
-              <i :class="item.iconCls"></i>
-              <span slot="title">{{item.name}}</span>
-            </template>
-
-            <el-menu-item
-              v-for="(child,key) in item.children"
-              :index="child.path"
-              :key="key+random"
-            >{{child.name}}</el-menu-item>
-          </el-submenu>-->
         </el-menu>
       </aside>
       <section class="content-container">
@@ -184,16 +169,10 @@ export default {
     toMain() {
       this.$router.push("/main");
     },
-    onSubmit() {
-      console.log("submit!");
+    //重置密码
+    ResetPw(){
+      this.$router.push({path:'/Passwdreset'})
     },
-    handleopen() {
-      //console.log('handleopen');
-    },
-    handleclose() {
-      //console.log('handleclose');
-    },
-    handleselect: function(a, b) {},
     //退出登录
     logout: function() {
       var _this = this;
@@ -418,5 +397,8 @@ export default {
 .breadcrumb {
   font-size: 16px;
   margin-top: 22px;
+}
+.text-color{
+  color: #fff
 }
 </style>
