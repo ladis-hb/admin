@@ -173,9 +173,7 @@ export default {
     lang() {
       return this.$store.getters.language;
     },
-    interval_time(){
-      return this.$store.state.interval_time
-    }
+    
   },
   methods: {
     show(ul) {

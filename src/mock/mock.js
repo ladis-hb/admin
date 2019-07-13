@@ -45,121 +45,39 @@ export default {
           }
         }, 1000);
         //解码password
-        function otad (str) { 
-          var s = window.atob(str)
-          var arr = s.split('')
-          for( var i=1;i<10;i++) arr.pop()
+        function otad(str) {
+          var arr = window.atob(str).split('')
+          for (var i = 1; i < 10; i++) arr.pop()
           return arr.join('')
-         }
-      });
-    });
-
-    //获取用户列表
-    mock.onGet('/user/list').reply(config => {
-      let { name } = config.params;
-      let mockUsers = _Users.filter(user => {
-        if (name && user.name.indexOf(name) == -1) return false;
-        return true;
-      });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            users: mockUsers
-          }]);
-        }, 1000);
-      });
-    });
-
-    //获取用户列表（分页）
-    mock.onGet('/user/listpage').reply(config => {
-      let { page, name } = config.params;
-      let mockUsers = _Users.filter(user => {
-        if (name && user.name.indexOf(name) == -1) return false;
-        return true;
-      });
-      let total = mockUsers.length;
-      mockUsers = mockUsers.filter((u, index) => index < 20 * page && index >= 20 * (page - 1));
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            total: total,
-            users: mockUsers
-          }]);
-        }, 1000);
-      });
-    });
-
-    //删除用户
-    mock.onGet('/user/remove').reply(config => {
-      let { id } = config.params;
-      _Users = _Users.filter(u => u.id !== id);
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '删除成功'
-          }]);
-        }, 500);
-      });
-    });
-
-    //批量删除用户
-    mock.onGet('/user/batchremove').reply(config => {
-      let { ids } = config.params;
-      ids = ids.split(',');
-      _Users = _Users.filter(u => !ids.includes(u.id));
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '删除成功'
-          }]);
-        }, 500);
-      });
-    });
-
-    //编辑用户
-    mock.onGet('/user/edit').reply(config => {
-      let { id, name, addr, age, birth, sex } = config.params;
-      _Users.some(u => {
-        if (u.id === id) {
-          u.name = name;
-          u.addr = addr;
-          u.age = age;
-          u.birth = birth;
-          u.sex = sex;
-          return true;
         }
       });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '编辑成功'
-          }]);
-        }, 500);
-      });
     });
 
-    //新增用户
-    mock.onGet('/user/add').reply(config => {
-      let { name, addr, age, birth, sex } = config.params;
-      _Users.push({
-        name: name,
-        addr: addr,
-        age: age,
-        birth: birth,
-        sex: sex
-      });
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve([200, {
-            code: 200,
-            msg: '新增成功'
-          }]);
-        }, 500);
-      });
-    });
+    //注册
+    mock.onPost('/user/register').reply(config => {
+
+      return new Promise((res, rej) => {
+        setTimeout(()=>{
+          res([200,{code:200,msg:'success'}])
+        },3000)
+      })
+    })
+    //请求获取邮箱验证码
+    mock.onGet('/user/getmail').reply(config =>{
+      return new Promise((res,rej)=>{
+        res([200,{code:200,msg:'success'}])
+      })
+    })
+    //{Validation:验证码,user:用户信息}  验证修改密码
+    mock.onPost('/resetpasswd').reply(config=>{
+      return new Promise((res,rej)=>{
+        res([200,{code:200,msg:'重置密码成功'}])
+      })
+    })
+
+
+
+
 
     //get dev list
     mock.onGet('/dev/all').reply(config => {
@@ -173,12 +91,10 @@ export default {
       let p3 = POWER.power3
       let t1 = TH
 
-      let d = new Date()
+
       function getdate() {
-        var h = d.getHours()
-        var m = d.getMinutes()
-        var s = d.getSeconds()
-        return `${h}:${m}:${s}`
+        let d = new Date()
+        return `${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
       }
 
       u1.date = getdate()

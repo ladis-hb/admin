@@ -21,37 +21,28 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 //Vue.use(Vcharts)
-Vue.component(VeLine.name,VeLine)
-
-//NProgress.configure({ showSpinner: false });
+Vue.component(VeLine.name, VeLine)
 
 const router = new VueRouter({
   routes
 })
 
 router.beforeEach((to, from, next) => {
-  //NProgress.start();
-  if (to.path == '/login') {
-    sessionStorage.removeItem('user'); 
+  if (to.path == '/login') sessionStorage.removeItem('user')
+  if (to.path == '/Registered' || to.path == '/Passwdreset') {
+    console.log(to.path)
+    next()
   }
-  let user = JSON.parse(sessionStorage.getItem('user'));
-  if (!user && to.path != '/login') {
+  if (!JSON.parse(sessionStorage.getItem('user')) && to.path != '/login') {
     next({ path: '/login' })
   } else {
     next()
   }
 })
 
-//router.afterEach(transition => {
-//NProgress.done();
-//});
-
 new Vue({
-  //el: '#app',
-  //template: '<App/>',
   router,
   store,
-  //components: { App }
   render: h => h(App)
 }).$mount('#app')
 

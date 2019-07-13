@@ -32,6 +32,7 @@
         </el-form-item>
         <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
         <el-button type="text" @click="handleReset2" style="float:right">重置密码</el-button>
+
         <el-form-item style="width:100%;">
           <el-button
             type="primary"
@@ -39,6 +40,9 @@
             @click.native.prevent="handleSubmit2"
             :loading="logining"
           >登录</el-button>
+          <div class="registered">
+            <a type="text" @click="handleRegistered">注册</a>
+          </div>
         </el-form-item>
       </el-form>
     </main>
@@ -66,22 +70,27 @@ export default {
 
   mounted() {
     var bool = localStorage.getItem("check_login");
-    if (bool) {
-      console.log(bool)
+    if (bool && localStorage.getItem("USER")) {
+      //console.log(bool);
       this.checked = bool;
-      var user = JSON.parse(localStorage.getItem("USER"))
-      var passwordarr = window.atob(user.password).split("")
-      for (var i=1;i<10;i++) passwordarr.pop()           
+      var user = JSON.parse(localStorage.getItem("USER"));
+      var passwordarr = window.atob(user.password).split("");
+      for (var i = 1; i < 10; i++) passwordarr.pop();
       this.ruleForm2.account = user.username;
-      this.ruleForm2.checkPass = passwordarr.join('');
+      this.ruleForm2.checkPass = passwordarr.join("");
     }
     this.$nextTick().then(() => {});
   },
   methods: {
+    //重置密码
     handleReset2() {
-      // this.$refs.ruleForm2.resetFields();
-      console.log("reset");
-      this.$router.push({ path: "reset" });
+      //console.log(this.$router)
+      this.$router.push({ path: "/Passwdreset" });
+    },
+    //注册用户
+    handleRegistered() {
+      console.log('/Registered')
+      this.$router.push({ path: "/Registered" });
     },
     handleSubmit2(ev) {
       var _this = this;
@@ -105,7 +114,7 @@ export default {
                 type: "error"
               });
             } else {
-              localStorage.removeItem('USER')
+              localStorage.removeItem("USER");
               if (this.checked) {
                 localStorage.setItem("check_login", this.checked);
                 localStorage.setItem("USER", JSON.stringify(loginParams));
@@ -134,6 +143,15 @@ export default {
 @media screen and (min-height: 500px) {
   .min {
     margin: 280px auto;
+  }
+}
+.main {
+  .registered {
+    display: block;
+
+    a:hover {
+      color: #18c79c;
+    }
   }
 }
 .background {

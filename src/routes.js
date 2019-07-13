@@ -1,6 +1,8 @@
 import Login from './views/Login.vue'
-import NotFound from './views/404.vue'
-import Home from './views/Home.vue'
+const Passwdreset = () => import('@/views/Passwdreset')
+const Registered = () => import('@/views/Registered')
+const NotFound = () => import('@/views/404.vue')
+const Home = () => import('@/views/Home.vue')
 const Main = () => import('@/views/Main.vue')
 const Air = () => import('@/views/main/Air')
 const IO = () => import('@/views/main/IO')
@@ -10,19 +12,37 @@ const POWER = () => import('@/views/main/POWER')
 
 const TEST = () => import('./views/main/test')
 let routes = [
+    //login
     {
         path: '/login',
         component: Login,
         name: 'login',
         hidden: true
     },
+    //404
     {
         path: '/404',
         component: NotFound,
         name: '',
         hidden: true
     },
-    //add
+    ///Passwdreset重置密码
+    {
+        path: '/Passwdreset',
+        component: Passwdreset,
+        name: "Passwdreset",
+        hidden: true
+    },
+    //Registered 注册
+    {
+        path: '/Registered',
+        component: Registered,
+        name: 'Registered',
+        hidden: true
+
+    },
+
+    //main page
     {
         path: '/',
         component: Home,
@@ -101,12 +121,6 @@ let routes = [
             { path: '/Temperature-humidity', name: 'Temperature_humidity', component: TH, iconCls: ['iconfont', 'icon-wenshidu'] }
         ]
     },
-
-
-    { path: '/test', name: 'TEST', component: TEST, hidden: true, iconCls: ["fa", " fa-thermometer-empty"] },
-
-
-
     {
         path: '*',
         hidden: true,
