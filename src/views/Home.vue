@@ -25,7 +25,7 @@
               </el-breadcrumb-item>
               <el-breadcrumb-item>
                 <el-dropdown>
-                  <span class="text-color" >
+                  <span class="text-color">
                     {{lang.language}}
                     <i class="el-icon-arrow-down el-icon--right text-color"></i>
                   </span>
@@ -63,7 +63,7 @@
                         <i class="el-icon-lock"></i>
                         <span>{{lang.loginout}}</span>
                       </div>
-                    </el-dropdown-item>                    
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-breadcrumb-item>
@@ -151,14 +151,11 @@ export default {
     Sysname() {
       return this.$store.state.sysname;
     },
-    random() {
-      return this.$store.state.random;
-    },
     lang() {
       return this.$store.getters.language;
     },
-    interval_time(){
-      return this.$store.state.interval_time
+    interval_time() {
+      return this.$store.state.interval_time;
     }
   },
   methods: {
@@ -170,22 +167,21 @@ export default {
       this.$router.push("/main");
     },
     //重置密码
-    ResetPw(){
-      this.$router.push({path:'/Passwdreset'})
+    ResetPw() {
+      this.$router.push({ path: "/Passwdreset" });
     },
     //退出登录
     logout: function() {
-      var _this = this;
       this.$confirm(this.lang.Confirm_exit, this.lang.tip, {
         confirmButtonText: this.lang.yes,
         cancelButtonText: this.lang.no,
         type: "warning"
       })
         .then(() => {
-          this.$emit('clearinterval')
+          this.$emit("clearinterval");
           sessionStorage.removeItem("user");
-          
-          _this.$router.push("/login");
+
+          this.$router.push("/login");
         })
         .catch(() => {});
     },
@@ -198,7 +194,12 @@ export default {
     },
     ///
     getdevinfo() {
-      getDevInfo({ id: 3 }).then(data => {
+      getDevInfo({
+        id: 3,
+        user: "user",
+        token: "***",
+        type: "getDevInfo"
+      }).then(data => {
         this.$store.commit("SETDEV", { data: data.data });
       });
     },
@@ -208,9 +209,11 @@ export default {
       });
     },
     getinfo() {
-      getLog().then(data => {
-        this.$store.commit("SETLOG", { data: data.data });
-      });
+      getLog({ id: 10, user: "user", token: "***", type: "getInfo" }).then(
+        data => {
+          this.$store.commit("SETLOG", { data: data.data });
+        }
+      );
     },
     interval_event() {
       this.getdevinfo();
@@ -223,9 +226,9 @@ export default {
   mounted() {
     var interval = setInterval(this.interval_event, this.interval_time);
     this.interval_event();
-    this.$once('clearinterval',()=>{
-      clearInterval(interval)
-    })
+    this.$once("clearinterval", () => {
+      clearInterval(interval);
+    });
 
     var user = sessionStorage.getItem("user");
     if (user) {
@@ -398,7 +401,7 @@ export default {
   font-size: 16px;
   margin-top: 22px;
 }
-.text-color{
-  color: #fff
+.text-color {
+  color: #fff;
 }
 </style>

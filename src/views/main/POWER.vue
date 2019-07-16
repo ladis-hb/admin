@@ -88,11 +88,11 @@ export default {
   },
   computed: {
     airs() {
-      if (typeof this.$store.state.dev.data == "undefined") {
+      if (typeof this.$store.state.dev == "undefined") {
         return { ups: [] };
       }
-      console.log(this.$store.state.dev);
-      let power = this.$store.state.dev.data.power;
+      //console.log(this.$store.state.dev);
+      let power = this.$store.state.dev.power;
       return power;
     },
     lang() {

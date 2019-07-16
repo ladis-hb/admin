@@ -57,10 +57,10 @@ export default {
   },
   computed: {
     loginfo() {
-      return this.$store.state.loginfo.data;
+      return this.$store.state.loginfo;
     },
     errorinfo() {
-      return this.$store.state.warringinfo.data;
+      return this.$store.state.warringinfo;
     },
     userinfo() {
       return this.$store.state.userinfo;

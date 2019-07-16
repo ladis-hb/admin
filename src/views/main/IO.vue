@@ -39,11 +39,11 @@ export default {
   computed: {
     airs() {
       
-      if (typeof this.$store.state.dev.data == "undefined") {
+      if (typeof this.$store.state.dev == "undefined") {
         return { io: [] };
       }
-      console.log(this.$store.state.dev.data.io);
-      return this.$store.state.dev.data.io;
+      //console.log(this.$store.state.dev.data.io);
+      return this.$store.state.dev.io;
     },
     lang() {
       return this.$store.getters.language;

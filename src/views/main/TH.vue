@@ -53,10 +53,10 @@ export default {
   },
   computed: {
     airs() {
-      if (typeof this.$store.state.dev.data == "undefined") {
+      if (typeof this.$store.state.dev == "undefined") {
         return { th: [] };
       }
-      return this.$store.state.dev.data.th;
+      return this.$store.state.dev.th;
     },
     lang() {
       return this.$store.getters.language;

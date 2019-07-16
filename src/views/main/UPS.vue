@@ -87,10 +87,10 @@ export default {
   },
   computed: {
     airs() {
-      if (typeof this.$store.state.dev.data == "undefined") {
+      if (typeof this.$store.state.dev == "undefined") {
         return { ups: [] };
       }
-      return this.$store.state.dev.data.ups;
+      return this.$store.state.dev.ups;
     },
     lang() {
       return this.$store.getters.language;

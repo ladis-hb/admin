@@ -5,7 +5,7 @@
         <el-col :span="24">
           <!-- <el-card class="all-x"> -->
           <!-- ups -->
-          <div v-for="(item,key) in devinfo" :key="key">
+          <div v-for="(item,key) in devinfo" :key="key" class="tab-border">
             <h3>{{lang[key]}}</h3>
             <hr />
             <el-table :data="item" style="width: 100%">
@@ -160,15 +160,15 @@ export default {
   computed: {
     devinfo: {
       get() {
-        //console.log(this.$store.state.dev.data)
-        return this.$store.state.dev.data;
+        //console.log(this.$store.state.dev)
+        return this.$store.state.dev;
       }
     },
     warringinfo() {
-      return this.$store.state.warringinfo.data;
+      return this.$store.state.warringinfo;
     },
     loginfo() {
-      return this.$store.state.loginfo.data;
+      return this.$store.state.loginfo;
     },
     lang() {
       return this.$store.getters.language;
@@ -177,7 +177,7 @@ export default {
   },
   methods: {
     show(ul) {
-      console.log(ul);
+      //console.log(ul);
       return ul;
     },
   },
@@ -190,6 +190,7 @@ export default {
 <style scoped>
 p {
   text-overflow: clip;
+  word-wrap: none;
 }
 .all-x {
   width: max-width;
@@ -210,5 +211,8 @@ p {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+.tab-border{
+  border-bottom: groove;
 }
 </style>

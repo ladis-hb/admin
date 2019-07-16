@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import * as actions from './actions'
 import { language } from './language'
 
 Vue.use(Vuex)
@@ -9,30 +8,24 @@ Vue.use(Vuex)
 const state = {
     count: 10,
     sysname: 'Ladis UPS',
-    random: Math.random() * Math.random(),
     //language
     language,
     lang: 'cn',
     //setting
     interval_time: 20000,
     // dev data
-    dev: {
-        ups: [],
-        air_cool: [],
-        io: [],
-        power: [],
-        th: []
-    },
+    dev: {ups: [],air_cool: [],io: [],power: [],th: [],},
     warringinfo: [],
     loginfo: []
 }
 //getters
 const getters = {
+    //根据定义的语言返回词表
     language: (state) => {
-        var lang = state.lang
+        var { lang, language } = state
         var selang = {}
-        for (var i in state.language) {
-            selang[i] = state.language[i][lang]
+        for (var [key, val] of Object.entries(language)) {
+            selang[key] = val[lang]
         }
         return selang
     }
@@ -49,12 +42,54 @@ const mutations = {
     },
 
     // set dev
+    /**
+     *
+     *
+     * @param {*} store.state
+     * @param {*} data
+     */
     SETDEV(state, data) {
-        if (state.dev.data == undefined) {
-            state.dev = data.data
+        var datas = data.data.data
+        if (state.dev.ups.length == 0) state.dev = datas
+
+        Object.keys(datas).map((devlist) => {
+            datas[devlist].map((li, key) => {
+
+                state.dev[devlist][key] = Object.assign(state.dev[devlist][key], {
+                    arg: li.arg,
+                    name: li.name,
+                    mode: li.arg.mode,
+                    brand: li.arg.brand,
+                    devid: li.devid,
+                    date: li.date,
+                    titles: Object.keys(li.arg),
+                })
+
+                if (devlist != 'power') {
+                    state.dev[devlist][key].args.push(li.arg)
+                } else {
+                    let metrics = [
+                        "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
+                        "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
+                        "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
+                        "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
+                    var power_arg = { date: li.date }
+                    metrics.map((ikey) => {
+                        power_arg[ikey] = li.arg[ikey] ? li.arg[ikey][2] : 0
+                    })
+                    state.dev[devlist][key].args.push(power_arg)
+                    //console.log(power_arg)
+                }
+            })
+        })
+        //state.dev = devs
+        /* var datas = data.data.data
+        if (state.dev.stat == false){
+            state.dev = datas
+            state.dev.stat = true
         }
-        let array = data.data.data
-        for (var i in array) {
+
+         for (var i in array) {
             for (var ii in array[i]) {
                 let dev = state.dev.data[i][ii]
                 //arg = data.UPS.u1
@@ -94,22 +129,22 @@ const mutations = {
                     state.dev.data[i][ii].args.push(arg.arg)
                 }
                 state.dev.data[i][ii] = Object.assign(dev, obj)
-            }
-        }
+            } 
+        } */
     },
     //set warring
     SETWARRING(state, data) {
-        state.warringinfo = data.data
+        //console.log(data.data)
+        state.warringinfo = data.data.data
     },
     //set log
     SETLOG(state, data) {
-        state.loginfo = data.data
+        state.loginfo = data.data.data
     }
 }
 
 // 创建 store 实例
 export default new Vuex.Store({
-    actions,
     getters,
     state,
     mutations

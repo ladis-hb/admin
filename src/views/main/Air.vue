@@ -92,10 +92,10 @@ export default {
   },
   computed: {
     airs() {
-      if (typeof this.$store.state.dev.data == "undefined") {
+      if (typeof this.$store.state.dev == "undefined") {
         return { air_cool: [] };
       }
-      return this.$store.state.dev.data.air_cool;
+      return this.$store.state.dev.air_cool;
     },
     lang() {
       return this.$store.getters.language;

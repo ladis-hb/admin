@@ -9,13 +9,18 @@
         label-width="0px"
         class="demo-ruleForm login-container min"
       >
-        <h3 class="title">系统登录</h3>
+        <h3 class="title">
+          {{lang.system}}{{lang.login}}
+          <div class="registered">
+            <a type="text" @click="setLanguage">English</a>
+          </div>
+        </h3>
         <el-form-item prop="account">
           <el-input
             type="text"
             v-model="ruleForm2.account"
             autocomplete="on"
-            placeholder="账号"
+            :placeholder="lang.account"
             autofocus
             required
           ></el-input>
@@ -25,13 +30,17 @@
             type="password"
             v-model="ruleForm2.checkPass"
             auto-complete="off"
-            placeholder="密码"
+            :placeholder="lang.password"
             clearable
             required
           ></el-input>
         </el-form-item>
-        <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-        <el-button type="text" @click="handleReset2" style="float:right">重置密码</el-button>
+        <el-checkbox v-model="checked" class="remember">{{lang.keep}}{{lang.password}}</el-checkbox>
+        <el-button
+          type="text"
+          @click="handleReset2"
+          class="reset-pw"
+        >{{lang.reset}}{{lang.password}}</el-button>
 
         <el-form-item style="width:100%;">
           <el-button
@@ -39,9 +48,9 @@
             style="width:100%;"
             @click.native.prevent="handleSubmit2"
             :loading="logining"
-          >登录</el-button>
+          >{{lang.login}}</el-button>
           <div class="registered">
-            <a type="text" @click="handleRegistered">注册</a>
+            <a type="text" @click="handleRegistered">{{lang.registered}}</a>
           </div>
         </el-form-item>
       </el-form>
@@ -51,6 +60,7 @@
 
 <script>
 import { requestLogin, resetpasswd } from "../api/api";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -58,23 +68,27 @@ export default {
       checked: false,
       logining: false,
       ruleForm2: {
-        account: "",
-        checkPass: ""
+        account: "admin",
+        checkPass: "123456"
       },
+      //效验规则
       rules2: {
         account: [{ required: true, message: "请输入账号", trigger: "blur" }],
         checkPass: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
-
+  //
+  computed: mapGetters({
+    lang: "language"
+  }),
+  //提交登录
   mounted() {
     var bool = localStorage.getItem("check_login");
     if (bool && localStorage.getItem("USER")) {
-      //console.log(bool);
-      this.checked = bool;
+      this.checked = true;
       var user = JSON.parse(localStorage.getItem("USER"));
-      var passwordarr = window.atob(user.password).split("");
+      var passwordarr = [...window.atob(user.password)];
       for (var i = 1; i < 10; i++) passwordarr.pop();
       this.ruleForm2.account = user.username;
       this.ruleForm2.checkPass = passwordarr.join("");
@@ -82,6 +96,10 @@ export default {
     this.$nextTick().then(() => {});
   },
   methods: {
+    //
+    setLanguage() {
+      this.$store.commit("SETlanguage", { data: 'en' });
+    },
     //重置密码
     handleReset2() {
       //console.log(this.$router)
@@ -89,24 +107,20 @@ export default {
     },
     //注册用户
     handleRegistered() {
-      console.log('/Registered')
+      //console.log("/Registered");
       this.$router.push({ path: "/Registered" });
     },
+    //提交登录
     handleSubmit2(ev) {
-      var _this = this;
       this.$refs.ruleForm2.validate(valid => {
         if (valid) {
-          //_this.$router.replace('/table');
           this.logining = true;
-          //NProgress.start();
           var loginParams = {
             username: this.ruleForm2.account,
-            password: window.btoa(this.ruleForm2.checkPass + "34.85@354") //password 用base64编码
+            password: window.btoa(`${this.ruleForm2.checkPass}34.85@354`) //password 用base64编码
           };
-          //console.log(loginParams);
           requestLogin(loginParams).then(data => {
             this.logining = false;
-            //NProgress.done();
             let { msg, code, user } = data;
             if (code !== 200) {
               this.$message({
@@ -114,12 +128,12 @@ export default {
                 type: "error"
               });
             } else {
-              localStorage.removeItem("USER");
               if (this.checked) {
                 localStorage.setItem("check_login", this.checked);
                 localStorage.setItem("USER", JSON.stringify(loginParams));
+              } else {
+                localStorage.removeItem("check_login");
               }
-              //
               sessionStorage.setItem("user", JSON.stringify(user));
               this.$router.push({ path: "/main" });
             }
@@ -181,6 +195,10 @@ export default {
   }
   .remember {
     margin: 0px 0px 35px 0px;
+  }
+  .reset-pw{
+    float:right;
+    padding: 0%
   }
 }
 </style>

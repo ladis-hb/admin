@@ -128,12 +128,28 @@ const langDefault = {
         cn:'否'
     },
     reset:{
-        en:'reset',
+        en:'reset ',
         cn:'重置'
     },
     password:{
         en:'password',
         cn:'密码'
+    },
+    keep:{
+        en:'keep ',
+        cn:'记住'
+    },
+    account:{
+        en:'account',
+        cn:'账号'
+    },
+    system:{
+        en:'system ',
+        cn:'系统'
+    },
+    registered:{
+        en:'registered',
+        cn:'注册'
     }
 
 

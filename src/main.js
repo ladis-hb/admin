@@ -29,16 +29,18 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path == '/login') sessionStorage.removeItem('user')
-  if (to.path == '/Registered' || to.path == '/Passwdreset') {
-    console.log(to.path)
-    next()
+  if (to.path == '/login') {
+    sessionStorage.removeItem('user')
   }
-  if (!JSON.parse(sessionStorage.getItem('user')) && to.path != '/login') {
+
+  if (!JSON.parse(sessionStorage.getItem('user')) && to.path != '/login' && to.path != '/Registered' && to.path != '/Passwdreset') {
+    console.log('true')
     next({ path: '/login' })
   } else {
     next()
   }
+
+
 })
 
 new Vue({
