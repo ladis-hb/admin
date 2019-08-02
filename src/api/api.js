@@ -1,8 +1,9 @@
 import axios from 'axios';
+axios.defaults.baseURL = 'http://127.0.0.1:3000';
 
 let base = '';
 //登录请求
-export const requestLogin = params => { return axios.post(`${base}/login`, params).then(res => res.data); };
+export const requestLogin = params => { return axios.get(`/Get/login`, {params}).then(res => res.data); };
 //register
 export const UserRegister = params => { return axios.post(`${base}/user/register`, params).then(res => res.data) }
 //重置密码

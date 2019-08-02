@@ -13,8 +13,8 @@ import Vuex from 'vuex'
 //import Vcharts from 'v-charts'
 import VeLine from 'v-charts/lib/line'
 import routes from './routes'
-import Mock from './mock'
-Mock.bootstrap();
+//import Mock from './mock'
+//Mock.bootstrap();
 //import 'font-awesome/css/font-awesome.min.css'
 import './assets/iconfont/iconfont.css'
 
@@ -25,15 +25,18 @@ Vue.use(Vuex)
 Vue.component(VeLine.name, VeLine)
 
 const router = new VueRouter({
+  //mode: 'history',
   routes
 })
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     sessionStorage.removeItem('user')
   }
 
-  if (!JSON.parse(sessionStorage.getItem('user')) && to.path != '/login' && to.path != '/Registered' && to.path != '/Passwdreset') {
+  if (!JSON.parse(sessionStorage.getItem('user')) 
+    && to.path != '/login' && to.path != '/Registered' 
+    && to.path != '/Passwdreset') {
     console.log('true')
     next({ path: '/login' })
   } else {
@@ -41,7 +44,7 @@ router.beforeEach((to, from, next) => {
   }
 
 
-})
+}) */
 
 new Vue({
   router,

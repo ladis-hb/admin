@@ -81,7 +81,7 @@
 
         <el-menu
           :default-active="$route.path"
-          class="el-menu-vertical-demo"
+          class="el-menu-vertical-demo bg"
           unique-opened
           router
           :collapse="asidCollapse"
@@ -255,6 +255,9 @@ export default {
     width: 45.83333%;
   }
 }
+.bg{
+    background-color: #343a40 ;
+  }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 100%;
   min-height: 400px;
@@ -262,6 +265,22 @@ export default {
 .asid {
   flex: 0 0 16.66667%;
   width: 16.66667%;
+  border-top: 1px #fff double;
+  
+
+  .el-menu{
+    background-color: #343a40;
+    span{
+      color: #fff;
+    }
+    li:hover{
+      span{
+        color: #343a40
+      }
+      
+    }
+  }
+  
 }
 .container {
   position: absolute;
@@ -278,7 +297,7 @@ export default {
   .header {
     height: 60px;
     line-height: 60px;
-    background: $color-primary;
+    background:#343a40;;
     color: #fff;
     .logo {
       max-width: 100%;
