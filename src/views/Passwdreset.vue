@@ -64,7 +64,7 @@ export default {
       this.loading = true;
       //提交用户名和邮箱，发送验证码到邮箱
       var resultValidation = await GetMailValidation({
-        user: this.register.user,
+        name: this.register.name,
         mail: this.register.mail
       });
       //填写收到的邮箱验证码

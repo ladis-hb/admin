@@ -1,13 +1,10 @@
-const Mongo = require('../util/MongoDB')
-const mongo = new Mongo(null, 'dev')
-
 module.exports = async (ctx) => {
     ctx.db = ctx.mongo.db('dev')
     var { type, updateTime, data, dataType } = ctx.request.body
 
     if (['io', 'phase', 'th', 'ac', 'ups','power'].includes(type)) {
         if (dataType == 'One') {
-            let res = await ctx.db.collection(type).insert(data)
+            let res = await ctx.db.collection(type).insertOne(data)
             ctx.status = 200
             ctx.body = {
                 code: 200, msg: `Data submission successful`,

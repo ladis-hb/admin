@@ -5,6 +5,7 @@ const Logger = require('koa-logger')
 const cors = require('koa-cors')
 const mongo = require('koa-mongo')
 const body = require('koa-body')
+const error = require('koa-error')
 
 const config = require('./config')
 const router = require('./router/index')
@@ -21,6 +22,7 @@ app.use(router.routes())
 
 app.use(KoaStatic(path.join(__dirname,config.dist)))
 
+app.use(error())
 
 app.listen(config.port, () => {
     console.log(`App listening on http:\/\/127.0.0.1:${config.port}`);

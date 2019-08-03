@@ -16,11 +16,11 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="register.name" placeholder></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="passwd">
-          <el-input v-model="register.passwd" placeholder></el-input>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="register.password" placeholder show-password></el-input>
         </el-form-item>
-        <el-form-item label="再次输入密码" prop="passwdck">
-          <el-input v-model="register.passwdck" placeholder></el-input>
+        <el-form-item label="再次输入密码" prop="passwordck">
+          <el-input v-model="register.passwordck" placeholder show-password></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="mail">
           <el-input v-model="register.mail" placeholder></el-input>
@@ -48,17 +48,17 @@ export default {
     return {
       loading: false,
       register: {
-        name: "user1",
-        passwd: "123456",
-        passwdck: "123456",
-        mail: "123456@qq.com",
+        name: "",
+        password: "",
+        passwordck: "",
+        mail: "",
         orgin: "",
         tel: ""
       },
       rules2: {
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
-        passwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        passwdck: [
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        passwordck: [
           { required: true, message: "请再次输入密码", trigger: "blur" }
         ],
         mail: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
@@ -70,6 +70,10 @@ export default {
   methods: {
     Register() {
       this.loading = true;
+      this.register.passwd = window.btoa(`${this.register.password}34.85@354`); //password 用base64编码
+      this.register.passwdck = window.btoa(
+        `${this.register.passwordck}34.85@354`
+      );
       UserRegister(this.register).then(data => {
         if (data.code == 200) {
           this.loading = false;
@@ -77,14 +81,14 @@ export default {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "info"
-          })
-            .then(() => {
-             this.$router.push({path:'/login'})
-            })
-            
-        }else{
-            this.$alert(`注册遇到问题，详情:\\${data.msg}`)
+          }).then(() => {
+            this.$router.push({ path: "/login" });
+          });
+        } else {
+          this.loading = false;
+          this.$alert(`注册遇到问题，详情:\\${data.msg}`);
         }
+        this.loading = false;
       });
     }
   }

@@ -5,11 +5,11 @@ let base = '';
 //登录请求
 export const requestLogin = params => { return axios.get(`/Get/login`, {params}).then(res => res.data); };
 //register
-export const UserRegister = params => { return axios.post(`${base}/user/register`, params).then(res => res.data) }
+export const UserRegister = params => { return axios.get(`/Get/register`, {params}).then(res => res.data) }
 //重置密码
-export const Resetpasswd = params => { return axios.post(`${base}/resetpasswd`, params).then(res => res.data) }
+export const Resetpasswd = params => { return axios.get(`/Get/resetpasswd`, params).then(res => res.data) }
 //获取验证码
-export const GetMailValidation = params => {return axios.get(`${base}/user/getmail`,params).then(res => res.data)}
+export const GetMailValidation = params => {return axios.get(`/Get/getmail`,{params}).then(res => res.data)}
 
 
 //get 设备概览

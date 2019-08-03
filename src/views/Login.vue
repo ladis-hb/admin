@@ -126,9 +126,9 @@ export default {
             username: this.ruleForm2.account,
             password: window.btoa(`${this.ruleForm2.checkPass}34.85@354`) //password 用base64编码
           };
-          requestLogin(loginParams).then(data => {
+          requestLogin(loginParams).then(res => {
             this.logining = false;
-            let { msg, code, user } = data;
+            let { msg, code, data } = res;
             if (code !== 200) {
               this.$message({
                 message: msg,
@@ -141,7 +141,7 @@ export default {
               } else {
                 localStorage.removeItem("check_login");
               }
-              sessionStorage.setItem("user", JSON.stringify(user));
+              sessionStorage.setItem("user", JSON.stringify(data.user));
               this.$router.push({ path: "/main" });
             }
           });

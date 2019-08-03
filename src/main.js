@@ -15,7 +15,6 @@ import VeLine from 'v-charts/lib/line'
 import routes from './routes'
 //import Mock from './mock'
 //Mock.bootstrap();
-//import 'font-awesome/css/font-awesome.min.css'
 import './assets/iconfont/iconfont.css'
 
 Vue.use(ElementUI)
@@ -29,7 +28,7 @@ const router = new VueRouter({
   routes
 })
 
-/* router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
   if (to.path == '/login') {
     sessionStorage.removeItem('user')
   }
@@ -44,7 +43,7 @@ const router = new VueRouter({
   }
 
 
-}) */
+})
 
 new Vue({
   router,
