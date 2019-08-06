@@ -66,6 +66,7 @@
 <script>
 import { requestLogin, resetpasswd } from "../api/api";
 import { mapGetters } from "vuex";
+import {btoa} from '../util/util'
 
 export default {
   data() {
@@ -73,8 +74,8 @@ export default {
       checked: false,
       logining: false,
       ruleForm2: {
-        account: "admin",
-        checkPass: "123456"
+        account: "",
+        checkPass: ""
       },
       //效验规则
       rules2: {
@@ -124,7 +125,7 @@ export default {
           this.logining = true;
           var loginParams = {
             username: this.ruleForm2.account,
-            password: window.btoa(`${this.ruleForm2.checkPass}34.85@354`) //password 用base64编码
+            password: btoa(this.ruleForm2.checkPass)
           };
           requestLogin(loginParams).then(res => {
             this.logining = false;
@@ -142,7 +143,9 @@ export default {
                 localStorage.removeItem("check_login");
               }
               sessionStorage.setItem("user", JSON.stringify(data.user));
-              this.$router.push({ path: "/main" });
+              sessionStorage.setItem('token',data.token)
+              this.$store.commit('SETuser',{user:data.user,token:data.token})
+              this.$router.push({ path: data.route });
             }
           });
         } else {

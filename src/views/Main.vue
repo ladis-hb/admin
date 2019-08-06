@@ -12,42 +12,35 @@
               <el-table-column label type="expand">
                 <template slot-scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
-                    <el-form-item :label="lang[li]" v-for="(li,ikey) in list[key].li" :key="ikey">
-                      <span>{{ props.row[li]? props.row[li]: props.row.arg[li] }}</span>
+                    <el-form-item :label="lang[li]" v-for="(val,li,ikey) in props.row" :key="ikey" v-if="li != '_id'">
+                      <span>{{ val || 'false' }}</span>
                     </el-form-item>
                   </el-form>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="lang[ul]"
-                :prop="ul"
-                v-for="(ul,iikey) in list[key].ul"
-                :key="iikey"
-              ></el-table-column>
+              <el-table-column v-for="(td,iikey) in ul" :label="lang[td]" :prop="td" :key="iikey"></el-table-column>
             </el-table>
           </div>
-
-          <!--  </el-card> -->
         </el-col>
 
-        <log :infodata="warringinfo" type="error"></log>
-        <log :infodata="loginfo" type="log"></log>
+       <!--  <log :infodata="warringinfo" type="error"></log>
+        <log :infodata="loginfo" type="log"></log> -->
       </el-row>
     </keep-alive>
   </section>
 </template>
 
 <script>
-
 import log from "./log/log.vue";
 export default {
   data() {
     return {
       cardcss: true,
       loading: false,
+      ul: ["name", "devid", "brand", "generateTime"],
       list: {
         ups: {
-          ul: ["name", "devid", "brand", "date"],
+          ul: ["name", "devid", "brand", "generateTime"],
           li: [
             "name",
             "brand",
@@ -71,8 +64,8 @@ export default {
             "output_voltage_l3"
           ]
         },
-        air_cool: {
-          ul: ["name", "devid", "brand", "date"],
+        ac: {
+          ul: ["name", "devid", "brand", "generateTime"],
           li: [
             "name",
             "devid",
@@ -101,7 +94,7 @@ export default {
           ]
         },
         power: {
-          ul: ["name", "devid", "brand", "date"],
+          ul: ["name", "devid", "brand", "generateTime"],
           li: [
             "name",
             "devid",
@@ -128,7 +121,7 @@ export default {
           ]
         },
         io: {
-          ul: ["name", "devid", "brand", "date"],
+          ul: ["name", "devid", "brand", "generateTime"],
           li: [
             "name",
             "devid",
@@ -140,7 +133,7 @@ export default {
           ]
         },
         th: {
-          ul: ["name", "devid", "brand", "date"],
+          ul: ["name", "devid", "brand", "generateTime"],
           li: [
             "name",
             "devid",
@@ -160,7 +153,6 @@ export default {
   computed: {
     devinfo: {
       get() {
-        //console.log(this.$store.state.dev)
         return this.$store.state.dev;
       }
     },
@@ -172,17 +164,7 @@ export default {
     },
     lang() {
       return this.$store.getters.language;
-    },
-    
-  },
-  methods: {
-    show(ul) {
-      //console.log(ul);
-      return ul;
-    },
-  },
-  mounted() {
-    
+    }
   }
 };
 </script>
@@ -212,7 +194,7 @@ p {
   margin-bottom: 0;
   width: 50%;
 }
-.tab-border{
+.tab-border {
   border-bottom: groove;
 }
 </style>

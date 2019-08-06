@@ -11,10 +11,14 @@ const state = {
     //language
     language,
     lang: 'cn',
+    //user
+    user: {},
+    token: '',
     //setting
     interval_time: 20000,
     // dev data
-    dev: {ups: [],air_cool: [],io: [],power: [],th: [],},
+    dev: 0,
+    devs:{ups:{},io:{},th:{},ac:{},th:{}},
     warringinfo: [],
     loginfo: []
 }
@@ -32,6 +36,16 @@ const getters = {
 }
 // 定义所需的 mutations
 const mutations = {
+    //set user
+    SETuser(state, data) {
+        state.user.name = data.user
+        state.token = data.token
+    },
+    //set user pic
+    SETuserInfo(state, data) {
+        state.user.pic = data.pic
+        //console.log(state.user.pic)
+    },
     //set interval
     SETinterval(state, data) {
         state.interval_time = (isNaN(data) ? 20000 : data * 1000)
@@ -43,13 +57,41 @@ const mutations = {
 
     // set dev
     /**
-     *
-     *
      * @param {*} store.state
      * @param {*} data
      */
     SETDEV(state, data) {
-        var datas = data.data.data
+        let dev_all = JSON.parse(JSON.stringify(data.data))
+        let d = JSON.parse(JSON.stringify(data.data))
+        state.dev = d
+        for (let key in dev_all) {
+            if (key != 'power') {
+                dev_all[key].map((val) => {
+                    let devid = String(val.devid)
+                    if (state.devs[key][devid ] == undefined) state.devs[key][devid ] = []
+                    state.devs[key][devid ].push(val)
+                })
+                console.log(state.devs[key])
+            } else {
+                let metrics = [
+                    "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
+                    "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
+                    "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
+                    "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
+
+               /*  dev_all[key].map((val, n) => {
+                    if (state.devs[key][n].arg == undefined) state.devs[key][n].arg = []
+                    let value = JSON.parse(JSON.stringify(val))
+
+                    state.devs[key][n].arg.push(val)
+                }) */
+
+            }
+
+        }
+
+        //state.dev = dev_all
+        /* var datas = data.data
         if (state.dev.ups.length == 0) state.dev = datas
 
         Object.keys(datas).map((devlist) => {
@@ -81,56 +123,8 @@ const mutations = {
                     //console.log(power_arg)
                 }
             })
-        })
-        //state.dev = devs
-        /* var datas = data.data.data
-        if (state.dev.stat == false){
-            state.dev = datas
-            state.dev.stat = true
-        }
+        }) */
 
-         for (var i in array) {
-            for (var ii in array[i]) {
-                let dev = state.dev.data[i][ii]
-                //arg = data.UPS.u1
-                let arg = array[i][ii]
-                let obj = {
-                    arg: arg.arg,
-                    name: arg.name,
-                    mode: arg.arg.mode,
-                    brand: arg.arg.brand,
-                    devid: arg.devid,
-                    date: arg.date,
-                    titles: [],
-
-                }
-                //检查arg key是否收集
-                if (dev.title == undefined) {
-                    for (var title in arg.arg) {
-                        obj.titles.push(title)
-                    }
-
-                }
-                //如果i == power，序列化arg.x[1,-1,0] == arg.x[0]
-                if (i == 'power') {
-                    let metrics = [
-                        "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
-                        "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
-                        "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
-                        "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
-                    let Powerobj = { date: arg.date }
-                    for (var iii of metrics) {
-                        Powerobj[iii] = arg.arg[iii] ? arg.arg[iii][2] : 0
-                    }
-                    //console.log(state.dev.data[i][ii].args)                  
-                    //console.log(state.dev.data[i][ii])
-                    state.dev.data[i][ii].args.push(Powerobj)
-                } else {
-                    state.dev.data[i][ii].args.push(arg.arg)
-                }
-                state.dev.data[i][ii] = Object.assign(dev, obj)
-            } 
-        } */
     },
     //set warring
     SETWARRING(state, data) {

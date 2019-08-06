@@ -48,7 +48,7 @@
               <el-breadcrumb-item>
                 <el-dropdown>
                   <span class="text-color">
-                    {{sysUserName}}
+                    {{Sysname}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </span>
                   <el-dropdown-menu split-button slot="dropdown">
@@ -70,7 +70,7 @@
             </el-breadcrumb>
           </div>
           <div class="hm-user">
-            <img src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+            <img :src="userPic" />
           </div>
         </el-col>
       </el-col>
@@ -126,34 +126,34 @@
 </template>
 
 <script>
-import { getDevInfo, getWarringInfo, getLog } from "../api/api";
+import { getUserInfo, getDevInfo, getWarringInfo, getLog } from "../api/api";
 export default {
   data() {
     return {
       asidCollapse: false,
       asidClass: ["asid"],
-      collapsed: false,
-      sysUserName: "",
-      sysUserAvatar: "",
-      form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
-      }
+      collapsed: false
     };
   },
   computed: {
+    //用户名
     Sysname() {
-      return this.$store.state.sysname;
+      return (
+        this.$store.state.user.name ||
+        JSON.parse(sessionStorage.getItem("user"))
+      );
     },
+    userPic() {
+      return this.$store.state.user.pic;
+    },
+    Token() {
+      return this.$store.state.token || sessionStorage.getItem("token");
+    },
+    //语言
     lang() {
       return this.$store.getters.language;
     },
+    //数据更新间隔
     interval_time() {
       return this.$store.state.interval_time;
     }
@@ -180,7 +180,7 @@ export default {
         .then(() => {
           this.$emit("clearinterval");
           sessionStorage.removeItem("user");
-
+          this.$store.commit("SETuser", { user: "", token: "" });
           this.$router.push("/login");
         })
         .catch(() => {});
@@ -192,38 +192,52 @@ export default {
     asidCollapsed() {
       this.asidCollapse = !this.asidCollapse;
     },
-    ///
+    //获取用户信息
+    getUserinfo() {
+      getUserInfo({ user: this.Sysname, token: this.Token }).then(res => {
+        if (res.data.code == 200)
+          this.$store.commit("SETuserInfo", res.data.data);
+        else console.log(res.data);
+      });
+    },
+    //获取设备数据信息
     getdevinfo() {
       getDevInfo({
-        id: 3,
-        user: "user",
-        token: "***",
-        type: "getDevInfo"
+        user: this.Sysname,
+        token: this.Token
       }).then(data => {
-        this.$store.commit("SETDEV", { data: data.data });
+        this.$store.commit("SETDEV", data.data);
       });
     },
+    //获取错误日志
     getwarring() {
-      getWarringInfo().then(data => {
-        this.$store.commit("SETWARRING", { data: data.data });
+      getWarringInfo({
+        user: this.Sysname,
+        token: this.Token
+      }).then(data => {
+        this.$store.commit("SETWARRING", data.data);
       });
     },
+    //获取运行日志
     getinfo() {
       getLog({ id: 10, user: "user", token: "***", type: "getInfo" }).then(
         data => {
-          this.$store.commit("SETLOG", { data: data.data });
+          this.$store.commit("SETLOG", data.data);
         }
       );
     },
+    //定时任务
     interval_event() {
       this.getdevinfo();
-      this.getwarring();
-      this.getinfo();
-      this.$notify({ message: "已更新数据！！！", position: "bottom-right" });
+      //this.getwarring();
+      //this.getinfo();
+      //this.$notify({ message: "已更新数据！！！", position: "bottom-right" });
       this.loading = false;
     }
   },
+  //页面read
   mounted() {
+    this.getUserinfo();
     var interval = setInterval(this.interval_event, this.interval_time);
     this.interval_event();
     this.$once("clearinterval", () => {
@@ -255,9 +269,9 @@ export default {
     width: 45.83333%;
   }
 }
-.bg{
-    background-color: #343a40 ;
-  }
+.bg {
+  background-color: #343a40;
+}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 100%;
   min-height: 400px;
@@ -266,21 +280,18 @@ export default {
   flex: 0 0 16.66667%;
   width: 16.66667%;
   border-top: 1px #fff double;
-  
 
-  .el-menu{
+  .el-menu {
     background-color: #343a40;
-    span{
+    span {
       color: #fff;
     }
-    li:hover{
-      span{
-        color: #343a40
+    li:hover {
+      span {
+        color: #343a40;
       }
-      
     }
   }
-  
 }
 .container {
   position: absolute;
@@ -297,7 +308,7 @@ export default {
   .header {
     height: 60px;
     line-height: 60px;
-    background:#343a40;;
+    background: #343a40;
     color: #fff;
     .logo {
       max-width: 100%;

@@ -49,20 +49,53 @@ const formatMD5 = (passwd) => {
     return md5.digest('hex')
 }
 
+/**
+ *
+ *
+ * @returns 返回格式化的日期 1990-01-01 12:12:12
+ */
 const formatDate = () => {
     let dates = new Date()
-    let date = `${dates.getFullYear()}.${dates.getMonth() - 1}.${dates.getDay()}`
+    let date = `${dates.getFullYear()}/${dates.getMonth() + 1}/${dates.getDate()}`
     let time = `${dates.getHours()}:${dates.getMinutes()}:${dates.getSeconds()}`
     return `${date} ${time}`
 }
 
+/**
+ *
+ *
+ * @param {*} status 日志状态
+ * @param {*} msg    日志信息
+ * @param {*} data   携带数据
+ * @returns
+ */
 const formatlog = (status, msg, data) => {
     return {
         status: status,
         msg: msg,
         data: data,
-        time:formatDate()
+        generateTime: formatDate()
     }
 }
 
-module.exports = { formartBody, formatPasswd, formatMD5, formatDate, formatlog }
+/**
+ *
+ *
+ * @param {*} ctx   ctx句柄
+ * @param {*} data  包含token and user
+ * @returns
+ */
+const Validation_user = async (ctx, data) => {
+    let { user, token } = data
+    ctx.db = ctx.mongo.db(config.DB_user)
+    let s = await ctx.db.collection('users').findOne({ name: user, token })
+    if (s) status = true
+    else status = false
+    let result = {
+        status,
+        u: user,
+    }
+    return result
+}
+
+module.exports = { formartBody, formatPasswd, formatMD5, formatDate, formatlog, Validation_user }

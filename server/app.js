@@ -9,10 +9,12 @@ const error = require('koa-error')
 
 const config = require('./config')
 const router = require('./router/index')
+const saveLog = require('./util/SaveLog')
 
 const app = new Koa()
-
+app.context.log = {}
 app.use(Logger())
+app.use(saveLog())
 
 app.use(cors())
 app.use(mongo({ db: 'ladis',}))

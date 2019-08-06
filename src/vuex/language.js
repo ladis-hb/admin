@@ -55,6 +55,10 @@ const langDefault = {
         en:'air conditioning',
         cn:'空调'
     },
+    ac:{
+        en:'air conditioning',
+        cn:'空调'
+    },
     Electricity_meter:{
         en:'Electricity meter',
         cn:'电量仪'
@@ -150,6 +154,10 @@ const langDefault = {
     registered:{
         en:'registered',
         cn:'注册'
+    },
+    generateTime:{
+        en:'generateTime',
+        cn:'生成时间'
     }
 
 

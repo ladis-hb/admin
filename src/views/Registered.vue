@@ -43,6 +43,7 @@
 
 <script>
 import { UserRegister } from "../api/api";
+import { btoa } from "../util/util";
 export default {
   data() {
     return {
@@ -70,26 +71,24 @@ export default {
   methods: {
     Register() {
       this.loading = true;
-      this.register.passwd = window.btoa(`${this.register.password}34.85@354`); //password 用base64编码
-      this.register.passwdck = window.btoa(
-        `${this.register.passwordck}34.85@354`
-      );
-      UserRegister(this.register).then(data => {
-        if (data.code == 200) {
+      (this.register.passwd = btoa(this.register.password)),
+        (this.register.passwdck = btoa(this.register.passwordck)),
+        UserRegister(this.register).then(data => {
+          if (data.code == 200) {
+            this.loading = false;
+            this.$confirm(" 用户已注册成功，是否返回登录界面?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "info"
+            }).then(() => {
+              this.$router.push({ path: "/login" });
+            });
+          } else {
+            this.loading = false;
+            this.$alert(`注册遇到问题，详情:\\${data.msg}`);
+          }
           this.loading = false;
-          this.$confirm(" 用户已注册成功，是否返回登录界面?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "info"
-          }).then(() => {
-            this.$router.push({ path: "/login" });
-          });
-        } else {
-          this.loading = false;
-          this.$alert(`注册遇到问题，详情:\\${data.msg}`);
-        }
-        this.loading = false;
-      });
+        });
     }
   }
 };

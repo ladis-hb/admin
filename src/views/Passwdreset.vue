@@ -13,17 +13,14 @@
         label-width="120px"
       >
         <h3>重置密码</h3>
-        <el-form-item label="名称/email" prop="name">
-          <el-input v-model="register.name" placeholder></el-input>
-        </el-form-item>
         <el-form-item label="邮箱" prop="mail">
           <el-input v-model="register.mail" placeholder="输入邮箱获取验证码"></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="passwd">
-          <el-input v-model="register.passwd" placeholder></el-input>
+          <el-input v-model="register.passwd" placeholder show-password></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码" prop="passwdck">
-          <el-input v-model="register.passwdck" placeholder></el-input>
+          <el-input v-model="register.passwdck" placeholder show-password></el-input>
         </el-form-item>
         <el-button type="success" class="main-submit" @click="ResetPw" :loading="loading">提交</el-button>
       </el-form>
@@ -37,20 +34,19 @@
 
 <script>
 import { GetMailValidation, Resetpasswd } from "../api/api";
+import { btoa } from "../util/util";
 export default {
   data() {
     return {
       loading: false,
       register: {
-        name: "user1",
-        passwd: "123456",
-        passwdck: "123456",
+        passwd: "",
+        passwdck: "",
         mail: "",
         orgin: "",
         tel: ""
       },
       rules2: {
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         passwd: [{ required: true, message: "请输入新密码", trigger: "blur" }],
         passwdck: [
           { required: true, message: "请再次输入密码", trigger: "blur" }
@@ -70,27 +66,33 @@ export default {
       //填写收到的邮箱验证码
       var result = false;
       if (resultValidation.code == 200) {
-        result = await this.$prompt("请输入验证码").then(val => {
+        result = await this.$prompt(resultValidation.msg).then(val => {
           return val.value;
         });
+
+        Resetpasswd({
+          Validation: result,
+          mail: this.register.mail,
+          passwd: btoa(this.register.passwd),
+          passwdck: btoa(this.register.passwdck)
+        }).then(data => {
+          this.loading = false;
+          if (data.code == 200) {
+            this.$confirm(data.msg, "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "info"
+            }).then(() => {
+              this.$router.push({ path: "/login" });
+            });
+          } else {
+            this.$confirm(data.msg);
+          }
+        });
       } else {
+        this.loading = false;
         this.$confirm(resultValidation.msg);
       }
-      //
-      if (!result) return this.$confirm("请输入验证码");
-      //
-      Resetpasswd({ Validation: result, user: this.register }).then(data => {
-        if (data.code == 200) {
-          this.loading = false;
-          this.$confirm(" 用户已成功修改密码，是否返回登录界面?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "info"
-          }).then(() => {
-            this.$router.push({ path: "/login" });
-          });
-        }
-      });
     }
   }
 };
