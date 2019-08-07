@@ -9,7 +9,7 @@
             <h3>{{lang[key]}}</h3>
             <hr />
             <el-table :data="item" style="width: 100%">
-              <el-table-column label type="expand">
+              <el-table-column label type="expand" class="expanded1">
                 <template slot-scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
                     <el-form-item :label="lang[li]" v-for="(val,li,ikey) in props.row" :key="ikey" v-if="li != '_id'">
@@ -170,6 +170,9 @@ export default {
 </script>
 
 <style scoped>
+.expanded1{
+  background-color: #99a9bf
+}
 p {
   text-overflow: clip;
   word-wrap: none;

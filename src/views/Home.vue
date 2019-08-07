@@ -3,7 +3,7 @@
     <el-col :span="24" class="header">
       <el-col :span="4" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
         <!-- title -->
-        {{collapsed?'':Sysname}}
+        {{collapsed||'Ladis'}}
       </el-col>
       <el-col :span="20" class="header-main">
         <el-col :span="2" class="hidden-icon">
@@ -205,8 +205,9 @@ export default {
       getDevInfo({
         user: this.Sysname,
         token: this.Token
-      }).then(data => {
-        this.$store.commit("SETDEV", data.data);
+      }).then(res=> {
+        this.$store.commit("SETDEV", res.data);
+        this.$store.dispatch('Serize_dev',res.data)
       });
     },
     //获取错误日志

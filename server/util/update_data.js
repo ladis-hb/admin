@@ -1,15 +1,51 @@
 /* 
-请求类型：post；
-格式json={
+简要描述：
+   工控数据提交接口
 
-  type: 'ups',  设备类型可选['io', 'th', 'ac', 'ups','power']
+请求URI：
+    http://116.62.48.175:81/Api/dev
 
-  updateTime: formatDate(), post上传时间
+请求类型：
+    POST
 
-  dataType: 'One',  数据组装类型，data是单条json还是Array ，例子：data:[{},{},{}] or data: {}
-  
-  data:{}  数据正文 
-  例子：data: {
+参数：
+    type:
+        必选:true
+        类型:String
+        说明：设备类型说明
+        可选项：['io', 'th', 'ac', 'ups','power']
+
+    updateTime:
+        必选:true
+        类型:Date
+        说明：数据生成时间
+
+    dataType:
+        必选:true
+        类型:String
+        说明：数据打包格式
+        可选项：['One','Many'] 
+              One:单条数据
+              Many:多条json合成的数组
+
+    data：
+        必选:true
+        类型:Object
+        说明：数据正文
+
+    Arg：
+        必选:false
+        类型:Object
+        说明：预留参数
+    
+
+输入示例：
+
+json={
+  type: 'ups',
+  updateTime: new Date(),
+  dataType: 'One',  
+  data:{  
     generateTime: formatDate(),
     name: 'ups-007',
     devid: 1,
@@ -31,8 +67,7 @@
     output_voltage_l1: getRndInteger(),
     output_voltage_l2: getRndInteger(),
     output_voltage_l3: getRndInteger()
-  }
-  
+  }  
 }
 
 返回数据：
@@ -203,7 +238,19 @@ var simulate_power = () => {
       active_power: [10, 1, getRndInteger()],
       reactive_power: [100, 2, getRndInteger()],
       power_factor: [99, 3, getRndInteger()],
-      quantity: [1, -1, getRndInteger()]
+      quantity: [1, -1, getRndInteger()],
+      input_voltage: [10, 1, getRndInteger()],
+      input_voltage_l1: [10, 1, getRndInteger()],
+      input_voltage_l2: [10, 1, getRndInteger()],
+      input_voltage_l3: [10, 1, getRndInteger()],
+      input_current: [10, 1, getRndInteger()],
+      input_current_l1: [10, 1, getRndInteger()],
+      input_current_l2: [10, 1, getRndInteger()],
+      input_current_l3: [10, 1, getRndInteger()],
+      input_frequency: [10, 1, getRndInteger()],
+      input_frequency_l1: [10, 1, getRndInteger()],
+      input_frequency_l2: [10, 1, getRndInteger()],
+      input_frequency_l3: [10, 1, getRndInteger()],
     }
   }
 }

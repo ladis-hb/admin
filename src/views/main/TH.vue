@@ -1,34 +1,32 @@
 <template>
   <keep-alive>
     <el-row>
-      <el-col :span="24" v-for="(item, index) in airs" :key="index">
+      <el-col :span="24" v-for="(item, key) in th.obj" :key="key">
         <hr />
+        <!-- 
+        <i class="iconfont icon-thdianyuan" ></i>-->
         <div class="div-block">
           <i class="iconfont icon-shebeizhuangtai" style="display: block"></i>
           <el-col :span="24">
             <h4>{{lang.Devid}}:</h4>
             <p>{{item.devid}}</p>
           </el-col>
-          <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
+          <el-col :span="8" v-for="(val,key1) in arr_title" :key="key1">
             <h4>{{lang[val]}}:</h4>
-            <p>{{item[val]?item[val]:item.arg[val]}}</p>
+            <p>{{item[val]}}</p>
           </el-col>
         </div>
         <div class="div-block">
           <i class="iconfont icon-yibiaopan" style="display: block"></i>
-          <el-col :span="12" v-for="(val,key) in arr_gress" :key="key">
-            <div v-for="(v1,id,k1) in val" :key="k1" v-if="item.arg[id]">
+          <el-col :span="6" v-for="(val2,key2) in arr_gress" :key="key2">
+            <div v-for="(v1,id,k1) in val2" :key="k1">
               <h4>{{lang[id]}}:{{v1}}</h4>
-              <ProgressDashboard :num="item.arg[id]" :unit="v1" :multip="multip"></ProgressDashboard>
+              <ProgressDashboard :num="item[id]" :unit="v1"></ProgressDashboard>
             </div>
           </el-col>
         </div>
         <i class="iconfont icon-tubiao-zhexiantu"></i>
-        <ve-line
-          :data="{columns:item.titles,rows:item.args}"
-          class="line"
-          :settings="chartSettings"
-        ></ve-line>
+        <ve-line :data="{columns:Object.keys(item),rows:th.array[item.devid]}" class :settings="chartSettings"></ve-line>
       </el-col>
     </el-row>
   </keep-alive>
@@ -40,10 +38,10 @@ export default {
   data() {
     return {
       multip: 1,
-      arr_title: ["name", "brand", "status"],
+      arr_title: ["name", "brand", ],
       arr_gress: [{ temperature: "C" }, { humidity: "%" }],
       chartSettings: {
-        dimension: ["date"], //指定date 为维度
+        dimension: ["generateTime"], //指定date 为维度
         metrics: ["temperature", "humidity"]
       }
     };
@@ -52,11 +50,13 @@ export default {
     ProgressDashboard
   },
   computed: {
-    airs() {
-      if (typeof this.$store.state.dev == "undefined") {
-        return { th: [] };
+   th() {
+      
+      if (typeof this.$store.state.devs == "undefined") return { th: [] };
+      return {
+        obj:this.$store.state.dev.th,
+        array:this.$store.state.devs.th
       }
-      return this.$store.state.dev.th;
     },
     lang() {
       return this.$store.getters.language;

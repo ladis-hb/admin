@@ -1,32 +1,33 @@
 <template>
   <keep-alive>
     <el-row>
-      <el-col :span="24" v-for="(item, index) in airs" :key="index">
+      
+      <el-col :span="24" v-for="(item, index) in power.obj" :key="index">
         <hr />
         <div class="div-block">
           <i class="iconfont icon-shebeizhuangtai" style="display: block"></i>
           <el-col :span="24">
-            <h4>{{lang.Devid}}:</h4>
+            <h4 class="head_he">{{lang.Devid}}:</h4>
             <p>{{item.devid}}</p>
           </el-col>
-          <el-col :span="8" v-for="(val,key) in arr_title" :key="key">
+          <el-col :span="8" v-for="(val,key1) in arr_title" :key="key1">
             <h4>{{lang[val]}}:</h4>
-            <p>{{item[val]?item[val]:item.arg[val]}}</p>
+            <p>{{item[val] || 'false'}}</p>
           </el-col>
         </div>
         <div class="div-block">
           <i class="iconfont icon-yibiaopan" style="display: block"></i>
           <el-col :span="4" v-for="(val,key) in arr_gress" :key="key">
-            <div v-for="(v1,id,k1) in val" :key="k1" v-if="item.arg[id]">
+            <div v-for="(v1,id,k1) in val" :key="k1">
               <h4>{{lang[id]}}:{{v1}}</h4>
-              <strong>({{lang.high}}:{{item.arg[id][0]}}/{{lang.low}}:{{item.arg[id][1]}}/{{lang.now}}:{{item.arg[id][2]}})</strong>
-              <ProgressDashboard :num="item.arg[id][2]" :unit="v1"></ProgressDashboard>
+                <p>{{lang.high}}:{{item[id][0]}}/{{lang.low}}:{{item[id][1]}}/{{lang.now}}:{{item[id][2]}}</p>
+              <ProgressDashboard :num="item[id][2]" :unit="v1"></ProgressDashboard>  
             </div>
           </el-col>
         </div>
         <i class="iconfont icon-tubiao-zhexiantu"></i>
         <ve-line
-          :data="{columns:item.titles,rows:item.args}"
+          :data="{columns:Object.keys(item),rows:power.array[item.devid]}"
           class="line"
           :settings="chartSettings"
         ></ve-line>
@@ -61,7 +62,7 @@ export default {
         { input_frequency_l3: "" }
       ],
       chartSettings: {
-        dimension: ["date"], //指定date 为维度
+        dimension: ["generateTime"], //指定date 为维度
         metrics: [
           "active_power",
           "reactive_power",
@@ -87,13 +88,13 @@ export default {
     ProgressDashboard
   },
   computed: {
-    airs() {
-      if (typeof this.$store.state.dev == "undefined") {
-        return { ups: [] };
+    power() {
+      
+      if (typeof this.$store.state.devs == "undefined") return { power: [] };
+      return {
+        obj:this.$store.state.dev.power,
+        array:this.$store.state.devs.power
       }
-      //console.log(this.$store.state.dev);
-      let power = this.$store.state.dev.power;
-      return power;
     },
     lang() {
       return this.$store.getters.language;
@@ -117,7 +118,12 @@ export default {
 </script>
 
 <style scoped>
-h4,
+.div-block h4{
+  margin: 0;
+}
+.head_he{
+  display: contents;
+}
 p {
   display: inline-block;
 }
