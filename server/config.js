@@ -1,7 +1,7 @@
 module.exports = {
     development:false,
     //
-    port:80,
+    port:81,
     development_port:3000,
     //
     dist:'./dist',
