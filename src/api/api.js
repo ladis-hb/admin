@@ -1,5 +1,7 @@
 import axios from 'axios';
-axios.defaults.baseURL = 'http://127.0.0.1:3000';
+import config from '../../server/config'
+
+if(config.development) axios.defaults.baseURL = `http://127.0.0.1:${config.development_port}`;
 
 let base = '';
 //登录请求

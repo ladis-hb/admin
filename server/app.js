@@ -26,8 +26,10 @@ app.use(KoaStatic(path.join(__dirname,config.dist)))
 
 app.use(error())
 
-app.listen(config.port, () => {
-    console.log(`App listening on http:\/\/127.0.0.1:${config.port}`);
+let port = config.development?config.development_port:config.port
+
+app.listen(port, () => {
+    console.log(`App listening on http:\/\/127.0.0.1:${port}`);
     console.log('App listening on router /api!');
     console.log('App listening on router /get');
     console.log('App listening on static');
