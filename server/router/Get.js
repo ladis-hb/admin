@@ -23,15 +23,15 @@ module.exports = async (ctx, next) => {
                             await ctx.db.collection(config.DB_user_users)
                                 .updateOne({ name, mail }, { $set: { token } }, { upsert: true })
                             ctx.body = formartBody('success', '用户登录成功', { user: name, route: '/main', token })
-                            ctx.log = formatlog('loginSuccess', '用户登录成功', query)
+                            ctx.log = formatlog(config.log_loginSuccess, '用户登录成功', query)
                         } else {
                             ctx.body = formartBody('error', '用户名或密码错误')
-                            ctx.log = formatlog('loginError', '用户登录失败-用户名或密码错误', query)
+                            ctx.log = formatlog(config.log_loginError, '用户登录失败-用户名或密码错误', query)
                         }
 
                     } else {
                         ctx.body = formartBody('error', '用户名错误')
-                        ctx.log = formatlog('loginError', '用户登录失败-没有检索到用户名', query)
+                        ctx.log = formatlog(config.log_loginError, '用户登录失败-没有检索到用户名', query)
                     }
                 }
                 break
@@ -51,7 +51,7 @@ module.exports = async (ctx, next) => {
                         let u = await ctx.db.collection(config.DB_user_users).findOne({ $or: [{ name }, { mail }] })
                         if (u) {
                             ctx.body = formartBody('warn', '用户名或邮箱已被注册，请使用未被注册的用户')
-                            ctx.log = formatlog('registerError', '用户名或邮箱已被注册', query)
+                            ctx.log = formatlog(config.log_registerError, '用户名或邮箱已被注册', query)
                         } else {
                             let user = {
                                 name,
@@ -65,7 +65,7 @@ module.exports = async (ctx, next) => {
                             }
                             let result = await ctx.db.collection(config.DB_user_users).insertOne(user)
                             ctx.body = formartBody('success', 'register success', result.result)
-                            ctx.log = formatlog('registerSuccess', '用户注册成功', query)
+                            ctx.log = formatlog(config.log_registerSuccess, '用户注册成功', query)
                         }
                     }
 
@@ -85,7 +85,7 @@ module.exports = async (ctx, next) => {
                             .updateOne({ mail }, { $set: { messageId, v_code } }, { upsert: true })
                         if (save_v_code.result && save_v_code.result.ok > 0) {
                             ctx.body = formartBody('success', '验证码已发送，请打开邮件查看', { messageId })
-                            ctx.log = formatlog('resetpwSuccess', '用户请求重置密码', { messageId, v_code, query })
+                            ctx.log = formatlog(config.log_resetpwSuccess, '用户请求重置密码', { messageId, v_code, query })
                         } else {
                             ctx.body = formartBody('warn', '保存校验码出错，请联系管理员手工修改')
                         }
@@ -105,7 +105,7 @@ module.exports = async (ctx, next) => {
                             .updateOne({ mail, v_code: Validation }, { $set: { passwd: pw, modifyTime: formatDate() }, v_code: '' }, { upsert: true })
                         if (save_v_code.result && save_v_code.result.ok > 0) {
                             ctx.body = formartBody('success', '密码已完成修改，请自主选择下一步操作')
-                            ctx.log = formatlog('resetpwSuccess', '用户完成修改密码', mail)
+                            ctx.log = formatlog(config.log_resetpwSuccess, '用户完成修改密码', mail)
                         } else {
                             ctx.body = formartBody('warn', '保存密码出错，请联系管理员手工修改')
                         }
@@ -170,9 +170,9 @@ module.exports = async (ctx, next) => {
     }
 
     //想不出来客户有啥日志可以显示的，暂时搁置
-    if (['Run_log_warring'].includes(params.id)) {
+    if (['Run_log_warring', 'Get_user_info'].includes(params.id)) {
         //效验token是否有效
-        let { token, user, limit = 100 } = query
+        let { token, user } = query
         let { status, u } = await Validation_user(ctx, { token, user })
         if (!status) {
             ctx.body = formartBody('error', 'Token已失效，请重新登录刷新Token')
@@ -185,13 +185,42 @@ module.exports = async (ctx, next) => {
                         ctx.body = formartBody('success', 'run log find new date,' + limit, run)
                     }
                     break
+                case 'Get_user_info':
+                    {
+                        let { type } = query
+                        switch (type) {
+                            case 'logInfo':
+                                {
+                                    let run = await ctx.db.collection(config.DB_log_dev)
+                                        .find({ "data.user": user }).sort({ generateTime: -1 }).project({ _id: 0, data: 0 }).toArray()
+                                    ctx.body = formartBody('success', '', run)
+                                }
+                                break
+                            case 'errorInfo':
+                                {
+                                    let run = await ctx.db.collection(config.DB_log_dev)
+                                        .find({ "data.user": user }).sort({ generateTime: -1 }).project({ _id: 0, data: 0 }).toArray()
+                                    ctx.body = formartBody('success', '', run)
+                                }
+                                break
+
+                            case 'userInfo':
+                                {
+                                    let run = await ctx.db.collection(config.DB_log_dev)
+                                        .find({ "data.user": user }).sort({ generateTime: -1 }).project({ _id: 0, data: 0 }).toArray()
+                                    ctx.body = formartBody('success', '', run)
+                                }
+                                break
+                        }
+                    }
+                    break
             }
         }
     }
     //add
     if (['addDevid', 'Get_devid_list', 'delete_Devid'].includes(params.id)) {
         //效验token是否有效
-        let { token, user} = query
+        let { token, user } = query
         let { status, u } = await Validation_user(ctx, { token, user })
         if (!status) {
             ctx.body = formartBody('error', 'Token已失效，请重新登录刷新Token')
@@ -202,9 +231,9 @@ module.exports = async (ctx, next) => {
                         let { devid, devType } = query
                         ctx.db = ctx.mongo.db(config.DB_user)
                         let result = await ctx.db.collection(config.DB_user_dev)
-                            .update({ user }, { $addToSet: { dev: { type: devType, devid} } }, { upsert: true })
+                            .updateOne({ user }, { $addToSet: { dev: { type: devType, devid } } }, { upsert: true })
                         ctx.body = formartBody('success', '添加数据完成', result.result)
-                        ctx.log = formatlog('addDevid', `${user} add devid ${devid}/${devType}`, query)
+                        ctx.log = formatlog(config.log_addDevid, `添加设备 ID：${devid}，类型：${devType}`, query)
                     }
                     break
                 case 'Get_devid_list':
@@ -218,10 +247,11 @@ module.exports = async (ctx, next) => {
 
                 case 'delete_Devid':
                     {
-                        let {devid} = query
+                        let { devid } = query
                         ctx.db = ctx.mongo.db(config.DB_user)
-                        let result = await ctx.db.collection(config.DB_user_dev).updateOne({user},{$pull:{dev:{devid}}})
-                        ctx.body = formartBody('success', '', result.result)  
+                        let result = await ctx.db.collection(config.DB_user_dev).updateOne({ user }, { $pull: { dev: { devid } } })
+                        ctx.body = formartBody('success', '', result.result)
+                        ctx.log = formatlog(config.log_delDevid, `删除了设备，ID：${devid}`, query)
                     }
                     break
             }

@@ -1,33 +1,35 @@
 <template>
   <el-container class="container .min-container">
     <el-header class="head">
-      <h4 class="title">信息</h4>
+       <h4 class="title">信息</h4>
     </el-header>
     <el-main>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="用户信息" name="first">
+        <el-tab-pane label="用户信息" name="userInfo">
           <h3>userinfo</h3>
-          <el-table :data="userinfo">
-            <el-table-column label></el-table-column>
+          <el-table :data="userInfo">
+            <el-table-column prop="generateTime" label="generateTime" sortable></el-table-column>
+            <el-table-column prop="status" label="status"  sortable></el-table-column>
+            <el-table-column prop="msg" label="msg"></el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="错误信息" name="second">
+        <el-tab-pane label="错误信息" name="errorInfo">
           <h3>错误信息</h3>
-          <el-table :data="errorinfo" style="width: 100%">
-            <el-table-column prop="id" label="id" width="60px" sortable></el-table-column>
-            <el-table-column prop="type" label="type" width="100px" sortable></el-table-column>
-            <el-table-column prop="level" label="level" width="100px" sortable></el-table-column>
-            <el-table-column prop="info" label="info"></el-table-column>
-            <el-table-column prop="date" label="date" width="100px" sortable></el-table-column>
+          <el-table :data="errorInfo" style="width: 100%" :loading="loading">
+            <el-table-column prop="generateTime" label="generateTime" sortable></el-table-column>
+            <el-table-column prop="status" label="status"  sortable></el-table-column>
+            <el-table-column prop="msg" label="msg"></el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="日志信息" name="third">
+        <el-tab-pane label="日志信息" name="logInfo">
           <h3>日志信息</h3>
-          <el-table :data="loginfo" style="width: 100%">
-            <el-table-column prop="id" label="id" width="60px" sortable></el-table-column>
-            <el-table-column prop="type" label="type" width="100px" sortable></el-table-column>
-            <el-table-column prop="info" label="info"></el-table-column>
-            <el-table-column prop="date" label="date" width="100px" sortable></el-table-column>
+          <el-table
+            :data="logInfo"
+            style="width: 100%"
+          >
+            <el-table-column prop="generateTime" label="generateTime" sortable></el-table-column>
+            <el-table-column prop="status" label="status"  sortable></el-table-column>
+            <el-table-column prop="msg" label="msg"></el-table-column>
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -47,27 +49,41 @@
 </template>
 
 <script>
-import { UserRegister } from "../api/api";
+import { Get_user_info } from "../api/api";
 export default {
   data() {
     return {
       loading: false,
-      activeName: "second"
+      activeName: "runInfo",
+      userInfo: [],
+      errorInfo: [],
+      logInfo: []
     };
   },
   computed: {
-    loginfo() {
-      return this.$store.state.loginfo;
+    Sysname() {
+      return this.$store.state.user.name;
     },
-    errorinfo() {
-      return this.$store.state.warringinfo;
-    },
-    userinfo() {
-      return this.$store.state.userinfo;
+    Token() {
+      return this.$store.state.token;
     }
   },
   methods: {
-    handleClick() {}
+    //解构tab实例
+    handleClick({ name }) {
+      this.loading = true;
+      Get_user_info({
+        user: this.Sysname,
+        token: this.Token,
+        type: name
+      }).then(res => {
+        this.loading = false;
+        let {data} = res.data
+        if(name == 'userInfo') this.userInfo = data
+        if(name == 'errorInfo') this.errorInfo = data
+        if(name == 'logInfo') this.logInfo = data
+      });
+    }
   }
 };
 </script>

@@ -11,14 +11,22 @@ module.exports = function () {
         if (ctx.log.status) {
             let { generateTime, status, msg, data } = ctx.log
             ctx.db = ctx.mongo.db(config.DB_log)
-            let collection = ctx.db.collection(config.DB_log_run)
+            let collection
             switch (status) {
-                case ['loginSuccess', 'registerSuccess', 'resetpwSuccess',]:
+                case 'loginSuccess':
+                case 'registerSuccess':
+                case 'resetpwSuccess':
                     collection = ctx.db.collection(config.DB_log_run)
                     break
 
-                case ['loginError', 'registerError',]:
+                case 'loginError':
+                case 'registerError':
                     collection = ctx.db.collection(config.DB_log_error)
+                    break
+
+                case 'addDevid':
+                case 'delDevid':
+                        collection = ctx.db.collection(config.DB_log_dev)
                     break
             }
 

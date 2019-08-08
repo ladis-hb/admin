@@ -9,12 +9,12 @@ module.exports = async (ctx) => {
 
             //add type
             //没有什么好方法直接替换，先删除再写入
-            await ctx.db.collection(type).deleteOne({ devid: data.devid })
-            let res = await ctx.db.collection(type).insertOne(data)
+            //await ctx.db.collection(type).deleteOne({ devid: data.devid })
+            let res = await ctx.db.collection(type).replaceOne({devid: data.devid},data,{upsert:true})
             ctx.status = 200
             ctx.body = {
                 code: 200, msg: `Data submission successful`,
-                res: { insertedCount: res.insertedCount, insertedIds: res.insertedIds }
+                res: { modifiedCount: res.modifiedCount, upsertedId: res.upsertedId,ops:res.ops }
             }
             ctx.log = ctx.body
         } else if (dataType == 'Many') {

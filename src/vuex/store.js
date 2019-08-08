@@ -7,13 +7,15 @@ Vue.use(Vuex)
 // 应用初始状态
 const state = {
     count: 10,
-    sysname: 'Ladis UPS',
+    sysname: '',
     //language
     language,
     lang: 'cn',
     //user
-    user: {},
-    token: '',
+    user: {
+        name:JSON.parse(sessionStorage.getItem("user"))
+    },
+    token: sessionStorage.getItem("token"),
     //setting
     interval_time: 20000,
     // dev data

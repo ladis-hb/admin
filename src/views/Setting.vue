@@ -112,26 +112,44 @@ export default {
   },
   methods: {
     delete_Devid(index) {
-      delete_Devid(
-        Object.assign(
-          { devid: index },
-          {
-            user: this.Sysname,
-            token: this.Token
-          }
-        )
-      ).then(res => {
-        if (res.data.code == 200) {
-          this.$message({
-            message: res.data.msg,
-            type: "success"
+      this.$confirm(`此操作将删除设备：${index}, 是否继续?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delete_Devid(
+            Object.assign(
+              { devid: index },
+              {
+                user: this.Sysname,
+                token: this.Token
+              }
+            )
+          ).then(res => {
+            if (res.data.code == 200) {
+              this.$message({
+                message: res.data.msg,
+                type: "success"
+              });
+              this.Get_devid_list();
+            }
           });
-          this.Get_devid_list();
-        }
-      });
+          this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
     devid_Submit() {
       if (this.formInline.devType == "" || this.formInline.devid == "") return;
+      this.formInline.devid = this.formInline.devid.trim()
       addDevid(
         Object.assign(this.formInline, {
           user: this.Sysname,

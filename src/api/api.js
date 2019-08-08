@@ -3,7 +3,6 @@ import config from '../../server/config'
 
 if(config.development) axios.defaults.baseURL = `http://127.0.0.1:${config.development_port}`;
 
-let base = '';
 //登录请求
 export const requestLogin = params => { return axios.get(`/Get/login`, {params}).then(res => res.data); };
 //register
@@ -28,7 +27,7 @@ export const getWarringInfo = params => {
 }
 //get 日志
 export const getLog = params => {
-    return axios.get(`${base}/info/info`, { params })
+    return axios.get(`/Get/Run_log_info`, { params })
 }
 
 //add devid
@@ -42,4 +41,9 @@ export const Get_devid_list = params =>{
 //del devid
 export const delete_Devid = params =>{
     return axios.get("/Get/delete_Devid",{params})
+}
+
+//log info
+export const Get_user_info = params =>{
+    return axios.get('/Get/Get_user_info',{params})
 }

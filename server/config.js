@@ -1,5 +1,5 @@
 module.exports = {
-    development:false,
+    development:true,
     //
     port:81,
     development_port:3000,
@@ -27,4 +27,16 @@ module.exports = {
     DB_log:'log',
     DB_log_run:'run',
     DB_log_error:'error',
+    DB_log_dev:'devs',
+
+    //log
+    log_loginSuccess:'loginSuccess',
+    log_loginError:'loginError',
+    log_registerError:'registerError',
+    log_registerSuccess:'registerSuccess',
+    log_resetpwSuccess:'resetpwSuccess',
+
+    log_addDevid:'addDevid',
+    log_delDevid:'delDevid',
+
 }

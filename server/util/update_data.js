@@ -265,13 +265,13 @@ maps()
 setInterval(maps, 5000)
 
 function maps() {
-  console.log('setInterval 1000')
+  console.log('setInterval 10000')
   simulate_dev.map(val => {
     axios.post('http://127.0.0.1:3000/Api/dev', val()).then(res => {
-      //axios.post('http://116.62.48.175:81/Api/dev', val).then(res => {
+      //axios.post('http://116.62.48.175:81/Api/dev', val()).then(res => {
       console.log(res.data)
     }).catch(err => {
-      console.log({ err: err.data, val: val })
+      console.log({ err: err, val: JSON.stringify(err) })
     })
   })
 }
