@@ -234,6 +234,9 @@ module.exports = async (ctx, next) => {
                             .updateOne({ user }, { $addToSet: { dev: { type: devType, devid } } }, { upsert: true })
                         ctx.body = formartBody('success', '添加数据完成', result.result)
                         ctx.log = formatlog(config.log_addDevid, `添加设备 ID：${devid}，类型：${devType}`, query)
+                        //添加了新的设备发送事件提醒刷新设备数组
+                        //ctx.event.emit('adddevs',{ devid, devType,user })
+                    
                     }
                     break
                 case 'Get_devid_list':

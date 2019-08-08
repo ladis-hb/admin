@@ -3,15 +3,11 @@ const Client = require('mongodb').MongoClient;
 class Mongo {
     constructor(url, db, collection) {
         this.url = url || 'mongodb://localhost:27017'
-        this.db = db
-        this.collection = collection || 'test'
-        this.DB = new Promise((res, rej) => {
-            Client.connect(this.url, { useNewUrlParser: true }, (err, db) => {
-                if (err) rej(err)
-                res(db.db(this.db))
-            })
-        })
+        this.db = 'user'
+        this.collection = collection
     }
+
+
 
     /**
      *
@@ -21,24 +17,23 @@ class Mongo {
      */
     DB() {
         return new Promise((res, rej) => {
-            Client.connect(this.url, { useNewUrlParser: true }, (err, db) => {
+            Client.connect(this.url, { useNewUrlParser: true }, (err, url) => {
                 if (err) rej(err)
-                res(db.db(this.db).collection(this.collection))
-
+                res(url.db(this.db).collection(this.collection))
             })
         })
     }
-    /**
-        *
-        *
-        * @param {*} query 可选，使用查询操作符指定查询条件
-        * @returns 以格式化的方式来显示第一条文档
-        * @memberof Mongo
-        */
+ /**
+     *
+     *
+     * @param {*} query 可选，使用查询操作符指定查询条件
+     * @returns 以格式化的方式来显示第一条文档
+     * @memberof Mongo
+     */
     async  findOne(query) {
         var db = await this.DB()
         return new Promise((res, rej) => {
-            db.findOne(query, (err, result) => {
+            db.findOne(query,(err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -125,10 +120,10 @@ class Mongo {
      * @returns
      * @memberof Mongo
      */
-    async updateOne(query, update) {
+    async updateOne(query,update) {
         var db = await this.DB()
         return new Promise((res, rej) => {
-            db.updateOne(query, update, ((err, result) => {
+            db.updateOne(query,update, ((err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -144,10 +139,10 @@ class Mongo {
      * @returns
      * @memberof Mongo
      */
-    async updateMary(query, update) {
+    async updateMary(query,update) {
         var db = await this.DB()
         return new Promise((res, rej) => {
-            db.updateMary(query, update, ((err, result) => {
+            db.updateMary(query,update, ((err, result) => {
                 if (err) rej(err)
                 res(result)
             })

@@ -13,13 +13,13 @@ const state = {
     lang: 'cn',
     //user
     user: {
-        name:JSON.parse(sessionStorage.getItem("user"))
+        name: JSON.parse(sessionStorage.getItem("user"))
     },
     token: sessionStorage.getItem("token"),
     //setting
     interval_time: 20000,
     // dev data
-    dev: 0,
+    dev: { ups: [], io: [], power: [], ac: [], th: [] },
     devs: { ups: {}, io: {}, power: {}, ac: {}, th: {} },
     warringinfo: [],
     loginfo: []
@@ -62,11 +62,23 @@ const mutations = {
      * @param {*} store.state
      * @param {*} data
      */
-    SETDEV(state, {data}) {        
-        state.dev = data        
+    SETDEV(state, { data }) {
+        state.dev = data
     },
-    SetDevs(state, data) {        
-        state.devs = data      
+    SetDev_socket(state, data) {
+        let { devType, devs } = data
+        console.log(devType)
+        if (state.dev[devType].length < 1) state.dev[devType].push(devs)
+        else state.dev[devType].map((val, key) => {
+            if (val.devid == devs.devid) {
+                state.dev[devType][key] = devs
+                return false
+            }
+        })
+        //console.log(state.dev[devType])
+    },
+    SetDevs(state, data) {
+        state.devs = data
     },
     //set warring
     SETWARRING(state, data) {
@@ -81,41 +93,41 @@ const mutations = {
 
 const actions = {
     //
-    Serize_dev({state,commit},{data}){
-       async function Se (){
-        let devs = JSON.parse(JSON.stringify(state.devs))
-        let dev_all = JSON.parse(JSON.stringify(data))
-        for (let key in dev_all) {
-            if (key != 'power') {
-                dev_all[key].map((val) => {
-                    let devid = String(val.devid)
-                    if (devs[key][devid] == undefined) devs[key][devid] = []
-                    devs[key][devid].push(val)
-                })
-            } else {
-                let metrics = [
-                    "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
-                    "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
-                    "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
-                    "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
+    Serize_dev({ state, commit }, { data }) {
+        async function Se() {
+            let devs = JSON.parse(JSON.stringify(state.devs))
+            let dev_all = JSON.parse(JSON.stringify(data))
+            for (let key in dev_all) {
+                if (key != 'power') {
+                    dev_all[key].map((val) => {
+                        let devid = String(val.devid)
+                        if (devs[key][devid] == undefined) devs[key][devid] = []
+                        devs[key][devid].push(val)
+                    })
+                } else {
+                    let metrics = [
+                        "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
+                        "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
+                        "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
+                        "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
 
-                dev_all[key].map((val) => {
-                    let devid = String(val.devid)
-                    if (devs.power[devid] == undefined) devs.power[devid] = []
-                    let p = JSON.parse(JSON.stringify(val))
-                    for (let pk of metrics){
-                        if (p[pk]) p[pk] = p[pk][2]
-                    }
-                    devs[key][devid].push(p)
-                })
+                    dev_all[key].map((val) => {
+                        let devid = String(val.devid)
+                        if (devs.power[devid] == undefined) devs.power[devid] = []
+                        let p = JSON.parse(JSON.stringify(val))
+                        for (let pk of metrics) {
+                            if (p[pk]) p[pk] = p[pk][2]
+                        }
+                        devs[key][devid].push(p)
+                    })
+                }
             }
+            return devs
         }
-        return devs
-       }
-       Se().then(res=>{
-        commit('SetDevs',res)
-       })
-       
+        Se().then(res => {
+            commit('SetDevs', res)
+        })
+
     }
 }
 

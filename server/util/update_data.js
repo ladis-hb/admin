@@ -262,7 +262,7 @@ function getRndInteger() {
 
 var simulate_dev = [simulate_col, simulate_io, simulate_power, simulate_th, simulate_ups]
 maps()
-setInterval(maps, 5000)
+setInterval(maps, 20000)
 
 function maps() {
   console.log('setInterval 10000')

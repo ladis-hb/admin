@@ -127,6 +127,9 @@
 
 <script>
 import { getUserInfo, getDevInfo, getWarringInfo, getLog } from "../api/api";
+const io = require("socket.io-client");
+const socket = io("http://127.0.0.1:3000");
+
 export default {
   data() {
     return {
@@ -205,9 +208,9 @@ export default {
       getDevInfo({
         user: this.Sysname,
         token: this.Token
-      }).then(res=> {
+      }).then(res => {
         this.$store.commit("SETDEV", res.data);
-        this.$store.dispatch('Serize_dev',res.data)
+        this.$store.dispatch("Serize_dev", res.data);
       });
     },
     //获取错误日志
@@ -239,12 +242,13 @@ export default {
   //页面read
   mounted() {
     this.getUserinfo();
-    var interval = setInterval(this.interval_event, this.interval_time);
+    //var interval = setInterval(this.interval_event, this.interval_time);
+
     this.interval_event();
     this.$once("clearinterval", () => {
       clearInterval(interval);
     });
-
+ 
     var user = sessionStorage.getItem("user");
     if (user) {
       user = JSON.parse(user);
@@ -253,6 +257,13 @@ export default {
     }
     this.$nextTick().then(() => {
       this.$router.push("/main");
+    });
+  },
+  created() {
+    socket.emit("registerRoom", { room: this.Sysname, token: this.Token });
+    socket.on("newDevs", data => {
+      console.log(data)
+      this.$store.commit('SetDev_socket',data)
     });
   }
 };
