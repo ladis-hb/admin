@@ -1,10 +1,8 @@
 <template>
   <div class="pages2">
     <el-container class="container .min-container">
-      <el-header class="head">
-        <h4 class="title">设置</h4>
-      </el-header>
       <el-main>
+        <el-page-header class="page-head" @back="goBack" content="设置  Setting"></el-page-header>
         <div class="block">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <h3>添加设备ID</h3>
@@ -45,13 +43,14 @@
           </el-form>
         </div>
         <div class="block">
-          <el-form class="main-i" @submit.native.prevent label-position="right" label-width="260px">
-            <h3>设置数据更新间隔</h3>
-            <el-form-item label="数据更新间隔:以秒为单位，最低20秒：">
-              <el-input v-model="data_update_time"></el-input>
+          <el-form class="main-i" @submit.native.prevent label-position="right" label-width="160px">
+            <h3>设置折线图数据条目</h3>
+            <el-form-item label="数据条目默认为10条：">
+              <el-input v-model="data_update_devArrayLength"></el-input>
             </el-form-item>
           </el-form>
         </div>
+        
         <div class="block">
           <el-form>
             <el-form-item label="获取Store数据池数据">
@@ -91,6 +90,14 @@ export default {
         this.$store.commit("SETinterval", val);
       }
     },
+    data_update_devArrayLength:{
+      get() {
+        return this.$store.state.devArrayLength
+      },
+      set(val) {
+        this.$store.commit("SetdevArrayLength", val);
+      }
+    },
     Store: {
       get() {
         return JSON.stringify(this.$store.state);
@@ -111,6 +118,9 @@ export default {
     }
   },
   methods: {
+    goBack(){
+      this.$router.go(-1)
+    },
     delete_Devid(index) {
       this.$confirm(`此操作将删除设备：${index}, 是否继续?`, "提示", {
         confirmButtonText: "确定",
@@ -183,6 +193,12 @@ export default {
     width: 100%;
     margin: 0% 0%;
   }
+}
+
+.page-head{
+  padding: 1rem;
+  font-size: 20px;
+  border-bottom: groove;
 }
 .container {
   overflow: auto;

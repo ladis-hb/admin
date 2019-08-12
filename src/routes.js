@@ -11,6 +11,11 @@ const UPS = () => import('@/views/main/UPS')
 const POWER = () => import('@/views/main/POWER')
 const SETTING = () => import('@/views/Setting')
 const INFO = () => import('@/views/Info')
+const Admin = () =>import('@/views/Admin.vue')
+const onlineList = () =>import('@/views/admin/onlineList.vue')
+const usersList = () =>import('@/views/admin/usersList.vue')
+const devsList = () =>import('@/views/admin/devsList.vue')
+const devList = () =>import('@/views/admin/devList.vue')
  
 let routes = [
     //login
@@ -27,6 +32,7 @@ let routes = [
         name: '',
         hidden: true
     },
+    
     ///Passwdreset重置密码
     {
         path: '/Passwdreset',
@@ -56,19 +62,32 @@ let routes = [
         name:'Info',
         hidden:true
     },
+    //Admin
+    {
+        path:'/Admin',
+        component:Admin,
+        name:'Admin',
+        children: [
+            { path: '/onlineList', component:onlineList , name: 'onlineList',  },
+            { path: '/usersList', component:usersList , name: 'usersList',  },
+            { path: '/devsList', component:devsList , name: 'devsList',  },
+            { path: '/devList/*', component:devList , name: 'devList',  },
+        ]
+    },
+    
 
-    //main page
+    // home 导航
+    // UPS
     {
         path: '/',
         component: Home,
-        name: 'main',
-        hidden: true,
+        name: 'Home',
+        iconCls: ['iconfont', 'icon-upsdianyuan'],
+        hidden:true,
         children: [
-            { path: '/main', name: 'main', component: Main }
+            { path: '/main', component: Main, name: 'main',}
         ]
     },
-
-    // home 导航
     // UPS
     {
         path: '/',

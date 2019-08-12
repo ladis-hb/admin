@@ -8,16 +8,17 @@ const config = require('../config')
  * @param {*} data body data
  * @returns
  */
-const formartBody = (status, msg, data) => {
-    var statu = {
+const formartBody = (status, msg, data,log) => {
+    let statu = {
         error: 404,
         success: 200,
         info: 304,
         warn: 0
     }
-    var body = data || {}
-    var msg = (typeof (msg) == 'string') ? msg : ''
-    return { code: statu[status], msg: msg, data: body }
+    let body = data || {}
+     msg = (typeof (msg) == 'string') ? msg : ''
+     log = log || false
+    return { code: statu[status], msg: msg, data: body ,log}
 }
 
 /**
@@ -57,23 +58,25 @@ const formatMD5 = (passwd) => {
 const formatDate = () => {
     let dates = new Date()
     let date = `${dates.getFullYear()}/${dates.getMonth() + 1}/${dates.getDate()}`
-    let time = `${dates.getHours()}:${dates.getMinutes()}:${dates.getSeconds()}`
+    let time = `${dates.getHours()}:${dates.getMinutes()}:${dates.getSeconds()}:${dates.getMilliseconds()}`
     return `${date} ${time}`
 }
 
-/**
+/*
  *
  *
- * @param {*} status 日志状态
+ *  @param {*} status 日志状态
  * @param {*} msg    日志信息
  * @param {*} data   携带数据
+ * @param {*} users  用户
  * @returns
  */
-const formatlog = (status, msg, data) => {
+const formatlog = (status, msg, data,user) => {
     return {
         status: status,
         msg: msg,
         data: data,
+        user:user || 'no record',
         generateTime: formatDate()
     }
 }

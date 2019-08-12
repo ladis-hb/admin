@@ -145,7 +145,8 @@ export default {
               sessionStorage.setItem("user", JSON.stringify(data.user));
               sessionStorage.setItem('token',data.token)
               this.$store.commit('SETuser',{user:data.user,token:data.token})
-              this.$router.push({ path: data.route });
+              //this.$router.push({ path: data.route });
+              this.$router.push('/')
             }
           });
         } else {

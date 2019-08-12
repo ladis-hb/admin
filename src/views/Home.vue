@@ -23,6 +23,10 @@
                 <i class="iconfont icon-icon_shezhi text-color"></i>
                 <span class="text-color">{{lang.setting}}</span>
               </el-breadcrumb-item>
+              <el-breadcrumb-item :to="{ path: '/onlineList' }" v-if="Sysname == 'admin'">
+                <i class="iconfont icon-xiaoxi text-color"></i>
+                <span class="text-color">Manege</span>
+              </el-breadcrumb-item>
               <el-breadcrumb-item>
                 <el-dropdown>
                   <span class="text-color">
@@ -102,7 +106,9 @@
           </el-menu-item>
         </el-menu>
       </aside>
-      <section class="content-container">
+      <section class="content-container" 
+       
+       >
         <div class="grid-content bg-purple-light">
           <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{lang[$route.name]}}</strong>
@@ -114,10 +120,8 @@
             </el-breadcrumb>
           </el-col>
           <!-- Main -->
-          <el-col :span="24" class="content-wrapper">
-            <transition name="fade" mode="out-in">
-              <router-view class="main-view"></router-view>
-            </transition>
+          <el-col :span="24" class="content-wrapper" >
+              <router-view class="main-view"></router-view>            
           </el-col>
         </div>
       </section>
@@ -127,15 +131,13 @@
 
 <script>
 import { getUserInfo, getDevInfo, getWarringInfo, getLog } from "../api/api";
-const io = require("socket.io-client");
-const socket = io("http://127.0.0.1:3000");
 
 export default {
   data() {
     return {
       asidCollapse: false,
       asidClass: ["asid"],
-      collapsed: false
+      collapsed: false,
     };
   },
   computed: {
@@ -181,9 +183,14 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.$emit("clearinterval");
+          //清理定时器
+          //this.$emit("clearinterval");
+          //清理session
           sessionStorage.removeItem("user");
-          this.$store.commit("SETuser", { user: "", token: "" });
+          //清理store
+          this.$store.commit("LoginOut",);
+          //断开socket连接
+          socket.close()
           this.$router.push("/login");
         })
         .catch(() => {});
@@ -241,10 +248,11 @@ export default {
   },
   //页面read
   mounted() {
+
     this.getUserinfo();
     //var interval = setInterval(this.interval_event, this.interval_time);
 
-    this.interval_event();
+    //this.interval_event();
     this.$once("clearinterval", () => {
       clearInterval(interval);
     });
@@ -260,11 +268,7 @@ export default {
     });
   },
   created() {
-    socket.emit("registerRoom", { room: this.Sysname, token: this.Token });
-    socket.on("newDevs", data => {
-      console.log(data)
-      this.$store.commit('SetDev_socket',data)
-    });
+    
   }
 };
 </script>

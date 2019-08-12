@@ -3,11 +3,33 @@ const Client = require('mongodb').MongoClient;
 class Mongo {
     constructor(url, db, collection) {
         this.url = url || 'mongodb://localhost:27017'
-        this.db = 'user'
-        this.collection = collection
+        this.db = db || 'test'
+        this.collection = collection || ''
+        this.Connect = () => {
+            return new Promise((res, rej) => {
+                Client.connect(this.url, { useNewUrlParser: true }, (err, url) => {
+                    if (err) rej(err)
+                    res(url)
+                })
+            })
+        }
     }
 
-
+    /**
+         *
+         *
+         * @returns 返回db的promise
+         * @memberof Mongo
+         */
+    DB(db) {
+        db = db || this.db
+        return new Promise((res, rej) => {
+            Client.connect(this.url, { useNewUrlParser: true }, (err, url) => {
+                if (err) rej(err)
+                res(url.db(this.db))
+            })
+        })
+    }
 
     /**
      *
@@ -15,7 +37,7 @@ class Mongo {
      * @returns 返回db的promise
      * @memberof Mongo
      */
-    DB() {
+    Collection() {
         return new Promise((res, rej) => {
             Client.connect(this.url, { useNewUrlParser: true }, (err, url) => {
                 if (err) rej(err)
@@ -23,17 +45,17 @@ class Mongo {
             })
         })
     }
- /**
-     *
-     *
-     * @param {*} query 可选，使用查询操作符指定查询条件
-     * @returns 以格式化的方式来显示第一条文档
-     * @memberof Mongo
-     */
+    /**
+        *
+        *
+        * @param {*} query 可选，使用查询操作符指定查询条件
+        * @returns 以格式化的方式来显示第一条文档
+        * @memberof Mongo
+        */
     async  findOne(query) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
-            db.findOne(query,(err, result) => {
+            db.findOne(query, (err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -47,9 +69,9 @@ class Mongo {
      * @memberof Mongo
      */
     async  find(query) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
-            db.find(query).toArray((err, result) => {
+            db.findMany(query, (err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -66,7 +88,7 @@ class Mongo {
      * @memberof Mongo
      */
     async  findlimit(query, sortobj, limit) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
             db.find(query).sort(sortobj).limit(limit).toArray((err, result) => {
                 if (err) rej(err)
@@ -83,7 +105,7 @@ class Mongo {
      * @memberof Mongo
      */
     async insert(query) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
             db.insertOne(query, ((err, result) => {
                 if (err) rej(err)
@@ -102,7 +124,7 @@ class Mongo {
          * @memberof Mongo
          */
     async insertArray(queryArray) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
             db.insertMany(queryArray, ((err, result) => {
                 if (err) rej(err)
@@ -120,10 +142,10 @@ class Mongo {
      * @returns
      * @memberof Mongo
      */
-    async updateOne(query,update) {
-        var db = await this.DB()
+    async updateOne(query, update) {
+        var db = await this.Collection()
         return new Promise((res, rej) => {
-            db.updateOne(query,update, ((err, result) => {
+            db.updateOne(query, update, ((err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -139,10 +161,10 @@ class Mongo {
      * @returns
      * @memberof Mongo
      */
-    async updateMary(query,update) {
-        var db = await this.DB()
+    async updateMary(query, update) {
+        var db = await this.Collection()
         return new Promise((res, rej) => {
-            db.updateMary(query,update, ((err, result) => {
+            db.updateMary(query, update, ((err, result) => {
                 if (err) rej(err)
                 res(result)
             })
@@ -160,7 +182,7 @@ class Mongo {
      * @memberof Mongo
      */
     async  delete(query) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
             db.deleteOne(query, ((err, result) => {
                 if (err) rej(err)
@@ -179,7 +201,7 @@ class Mongo {
      * @memberof Mongo
      */
     async  save(query) {
-        var db = await this.DB()
+        var db = await this.Collection()
         return new Promise((res, rej) => {
             db.save(query, ((err, result) => {
                 if (err) rej(err)

@@ -47,3 +47,12 @@ export const delete_Devid = params =>{
 export const Get_user_info = params =>{
     return axios.get('/Get/Get_user_info',{params})
 }
+//admin - user
+export const admin_get_info_list = params =>{
+    return axios.get('/Get/admin_get_info_list',{params})
+}
+
+//admin modify_user_info
+export const modify_user_info = params =>{
+    return axios.get('/Get/modify_user_info',{params})
+}

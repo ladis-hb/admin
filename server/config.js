@@ -16,7 +16,7 @@ module.exports = {
     //
     Devs:['ups','ac','power','th','io'],
 
-    DB_dev:'dev',
+    DB_dev:'devs',
 
     DB_ladis:'ladis',
 
@@ -28,6 +28,8 @@ module.exports = {
     DB_log_run:'run',
     DB_log_error:'error',
     DB_log_dev:'devs',
+    DB_log_socket:'socket',
+    DB_log_other:'other',
 
     //log
     log_loginSuccess:'loginSuccess',

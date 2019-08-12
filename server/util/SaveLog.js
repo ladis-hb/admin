@@ -8,8 +8,9 @@ const config = require('../config.js')
 module.exports = function () {
     return async (ctx, next) => {
         await next()
-        if (ctx.log.status) {
-            let { generateTime, status, msg, data } = ctx.log
+        let {log} = ctx.body
+        if(log){
+            let { generateTime, status, msg, data ,user} = log
             ctx.db = ctx.mongo.db(config.DB_log)
             let collection
             switch (status) {
@@ -28,10 +29,16 @@ module.exports = function () {
                 case 'delDevid':
                         collection = ctx.db.collection(config.DB_log_dev)
                     break
+
+                    default:
+                            collection = ctx.db.collection(config.DB_log_other)
+                    break
             }
 
-            collection.insertOne(ctx.log)
+            collection.insertOne({ generateTime, status, msg, data ,user})
         }
+       
+        ctx.body.log = false
     }
 
 

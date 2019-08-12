@@ -14,13 +14,19 @@ const EventEmitter = require('events').EventEmitter;
 const config = require('./config')
 const router = require('./router/index')
 const saveLog = require('./util/SaveLog')
+const format = require('./util/Format')
 
 const app = new Koa()
 const io = new IO()
-const cm = new CM(null,config.DB_user,config.DB_user_dev)
+const cm = new CM()
 const event = new EventEmitter();
 
+//存取所有设备devid:[user]
 const devsMap = new Map()
+//存取所有连接socket user:socket.id
+const userMap = new Map()
+//存取所有连接socket socket.id:user,方便删除使用
+const socketIdMap = new Map()
 
 app.context.event = event
 /* 
@@ -34,6 +40,10 @@ app.use(error())
 async实现，不阻塞resopen,
 */
 app.context.log = {}
+app.use(async (ctx, next) => {
+    await next()
+    //console.log(ctx.body)
+})
 app.use(saveLog())
 //app.use(Logger())
 app.use(cors())
@@ -44,24 +54,87 @@ app.use(body())
 Socket.io
 */
 io.attach(app)
+/* 
+监听连接事件，
+*/
 app.io.on('connection', async socket => {
-    socket.on('registerRoom', data => {
-        socket.join(data.room)
-    })    
+    infoStream(1, 'onlien', `新的Socket用户连接，Socket.id: ${socket.id}`)
+    socket.on('register', ({ user, token }) => {
+        infoStream(1, 'register', `Socket用户:（${user}）已连接，Socket.id: ${socket.id}`, [user])
+        userMap.set(user, socket.id)
+        socketIdMap.set([socket.id], user)
+    })
+    socket.on('disconnect', () => {
+        infoStream(1, 'offlien', `Socket用户:（${socketIdMap.get(socket.id)}）已离线，Socket.id: ${socket.id}`)
+        userMap.delete(socketIdMap.get(socket.id))
+        socketIdMap.delete(socket.id)
+    })
+})
+/**
+ *输出日志，socket发送消息
+ *
+ * @param {*} infoType 日志类型 infoType = ['Device', 'Socket'][infoType]
+ * @param {*} line  状态
+ * @param {*} msg   消息体
+ * @param {*} toID  发送用户 Array
+ */
+async function infoStream(infoType, line, msg, toID) {
+    infoType = ['Device', 'Socket'][infoType]
+    msg = JSON.stringify(msg)
+    let User = toID ? ['admin', ...[toID]] : ['admin']
+    let generateTime = format.formatDate()
+    console.log(`Socket.IO  ${generateTime}   ${infoType}  ${line}  ${msg}`)
+
+    let db = await cm.Connect()
+    db.db(config.DB_log).collection(config.DB_log_socket).insertOne({ infoType, line, msg, generateTime, user: toID || 'no record' })
+    let online_user = []
+    userMap.forEach((val, key) => {
+        online_user.push({ user:key,socketId:val })
+    })
+    let online_devs = [] 
+    devsMap.forEach((val, key) => {
+        online_devs.push({ devid:key,
+            devType:val.devType,
+            user:val.user.join('/'),
+        })
+    })
+    User.map(async u => {
+        if (userMap.has(u)) io.to(userMap.get(u)).emit('infoStream', {
+            info: { infoType, line, msg, generateTime },
+            onlinelist: {
+                devs: online_devs,
+                user: online_user,
+            }
+        })
+    })
+}
+
+event.on('devs', async data => {
+    let { devs, type } = data
+    let id = devs.devid
+    if (devsMap.has(id)) {
+        let { user, devType } = devsMap.get(id)
+        user.map(async u => {
+            if (userMap.has(u)) io.to(userMap.get(u)).emit('newDevs', { devType, devs })
+        })
+    } else {
+        let db = await cm.Connect()
+        let devs_list = await db.db(config.DB_user).collection(config.DB_user_dev).find({ 'dev.devid': id }).project({ _id: 0, user: 1 }).toArray()
+        let user = devs_list.map(u => {
+            return u.user
+        })
+        infoStream(0, 'offlien', `(${type})设备已上线，设备id：${id}， 设备所属用户：${user}`, user)
+        devsMap.set(id, { devType: type, user })
+    }
 })
 
-event.on('devs', async devs => {      
-    if (devsMap.has(devs.devid)) {
-       let { user, devType } = devsMap.get(devs.devid)
-       let to = io.to(user).emit('newDevs', { devType, devs })
-   } else {
-       let devs_list = await cm.find({})
-       for (let m of devs_list){
-           for (let m1 of m.dev){
-               devsMap.set(m1.devid,{user:m.user,devType:m1.type})
-           }
-       }
-   } 
+event.on('adddevs', async data => {
+    let { devid, devType, user } = data
+    devsMap.set(devid, { devType, user: [user] })
+})
+event.on('deldevs', async data => {
+    let { devid } = data
+    devsMap.delete(devid)
 })
 
 

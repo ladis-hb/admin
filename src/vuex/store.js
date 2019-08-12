@@ -16,10 +16,15 @@ const state = {
         name: JSON.parse(sessionStorage.getItem("user"))
     },
     token: sessionStorage.getItem("token"),
+    //infoStream
+    infoStream:{info:[],onlinelist:{}},
     //setting
     interval_time: 20000,
     // dev data
+    //定义v-chart数组的长度
+    devArrayLength: 20,
     dev: { ups: [], io: [], power: [], ac: [], th: [] },
+    devSocket: { ups: [], io: [], power: [], ac: [], th: [] },
     devs: { ups: {}, io: {}, power: {}, ac: {}, th: {} },
     warringinfo: [],
     loginfo: []
@@ -43,6 +48,23 @@ const mutations = {
         state.user.name = data.user
         state.token = data.token
     },
+    //退出登录清理程序
+    LoginOut(state){
+        state.user = {
+            name: JSON.parse(sessionStorage.getItem("user"))
+        },
+        state.infoStream = [],
+        state.token ='',
+        state.dev = { ups: [], io: [], power: [], ac: [], th: [] },
+        state.devSocke = { ups: [], io: [], power: [], ac: [], th: [] },
+        state.devs ={ ups: {}, io: {}, power: {}, ac: {}, th: {} }
+    },
+    //infoStream
+    infoStream(state,data){
+        let {info,onlinelist} =data
+        state.infoStream.info.unshift(info)
+        state.infoStream.onlinelist = onlinelist     
+    },
     //set user pic
     SETuserInfo(state, data) {
         state.user.pic = data.pic
@@ -51,6 +73,10 @@ const mutations = {
     //set interval
     SETinterval(state, data) {
         state.interval_time = (isNaN(data) ? 20000 : data * 1000)
+    },
+    //set devArrayLength
+    SetdevArrayLength(state, data) {
+        state.devArrayLength = data
     },
     //set language
     SETlanguage(state, data) {
@@ -65,17 +91,30 @@ const mutations = {
     SETDEV(state, { data }) {
         state.dev = data
     },
+    //接受Socket传输来的数据，配置dev,devs
     SetDev_socket(state, data) {
         let { devType, devs } = data
-        console.log(devType)
-        if (state.dev[devType].length < 1) state.dev[devType].push(devs)
-        else state.dev[devType].map((val, key) => {
-            if (val.devid == devs.devid) {
-                state.dev[devType][key] = devs
-                return false
-            }
-        })
-        //console.log(state.dev[devType])
+        let { devid } = devs
+        state.devSocket[devType][devid] = (devs)
+        state.dev[devType] = Object.values(state.devSocket[devType])
+
+        let arr = state.devs[devType][devid] || []
+        if (arr.length > state.devArrayLength) arr.shift()
+        //配置devs
+        if (devType == 'power') {
+            let metrics = [
+                "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
+                "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
+                "input_current", "input_current_l1", "input_current_l2", 'input_current_l3',
+                "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
+
+            metrics.forEach(key => {
+                devs[key] = devs[key][2] || 0
+            })
+        }
+        state.devs[devType][devid] = [...arr, devs]
+
+
     },
     SetDevs(state, data) {
         state.devs = data

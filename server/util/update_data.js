@@ -262,10 +262,10 @@ function getRndInteger() {
 
 var simulate_dev = [simulate_col, simulate_io, simulate_power, simulate_th, simulate_ups]
 maps()
-setInterval(maps, 20000)
+setInterval(maps, 1000)
 
 function maps() {
-  console.log('setInterval 10000')
+  console.log('setInterval 1000')
   simulate_dev.map(val => {
     axios.post('http://127.0.0.1:3000/Api/dev', val()).then(res => {
       //axios.post('http://116.62.48.175:81/Api/dev', val()).then(res => {

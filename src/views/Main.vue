@@ -1,5 +1,6 @@
 <template>
-  <section v-loading="loading">
+  <section v-loading="loading2"
+       element-loading-text="正在注册用户,以获取设备信息...">
     <keep-alive>
       <el-row>
         <el-col :span="24">
@@ -31,10 +32,16 @@
 </template>
 
 <script>
+const io = require("socket.io-client");
+const config = require('../../server/config')
+let ad = config.development?'http://127.0.0.1:3000':''
+const socket = io(ad);
 import log from "./log/log.vue";
 export default {
   data() {
     return {
+
+      loading2:true,
       cardcss: true,
       loading: false,
       ul: ["name", "devid", "brand", "generateTime"],
@@ -151,6 +158,16 @@ export default {
     log
   },
   computed: {
+     //用户名
+    Sysname() {
+      return (
+        this.$store.state.user.name ||
+        JSON.parse(sessionStorage.getItem("user"))
+      );
+    },
+    Token() {
+      return this.$store.state.token || sessionStorage.getItem("token");
+    },
     devinfo: {
       get() {
         return this.$store.state.dev;
@@ -165,7 +182,31 @@ export default {
     lang() {
       return this.$store.getters.language;
     }
-  }
+  },
+
+  mounted() {
+    console.log('main mounted')
+    //注册socket
+    socket.emit("register", { user: this.Sysname, token: this.Token });
+    //监听掉线，重连后重新注册
+    socket.on('reconnect',()=>{
+      console.log(`Socket reconnect`)
+      socket.emit("register", { user: this.Sysname, token: this.Token });
+    })
+    //监听设备信息
+    socket.on("newDevs", data => {
+      //console.log(data)
+      this.loading2 = false
+      this.$store.commit('SetDev_socket',data)
+    });
+    //监听用户信息流
+    socket.on('infoStream',data =>{
+      //console.log(data)
+      this.$store.commit('infoStream',data)
+    })
+
+    
+  },
 };
 </script>
 
