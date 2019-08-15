@@ -92,6 +92,7 @@ OR
 
 const axios = require('axios')
 const { formatDate } = require('./Format')
+const config = require('../config')
 
 var simulate_ups = () => {
   return {
@@ -262,13 +263,14 @@ function getRndInteger() {
 
 var simulate_dev = [simulate_col, simulate_io, simulate_power, simulate_th, simulate_ups]
 maps()
-setInterval(maps, 1000)
+setInterval(maps, 5000)
 
 function maps() {
   console.log('setInterval 1000')
   simulate_dev.map(val => {
-    axios.post('http://127.0.0.1:3000/Api/dev', val()).then(res => {
-      //axios.post('http://116.62.48.175:81/Api/dev', val()).then(res => {
+    axios.post(config.dev_api, val()).then(res => {
+      console.log(config.dev_api);
+      
       console.log(res.data)
     }).catch(err => {
       console.log({ err: err, val: JSON.stringify(err) })

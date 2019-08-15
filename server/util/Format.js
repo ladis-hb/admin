@@ -17,7 +17,7 @@ const formartBody = (status, msg, data,log) => {
     }
     let body = data || {}
      msg = (typeof (msg) == 'string') ? msg : ''
-     log = log || false
+     log = log || false     
     return { code: statu[status], msg: msg, data: body ,log}
 }
 

@@ -32,7 +32,7 @@ app.context.event = event
 /* 
 最后拦截error
 */
-app.use(error())
+//app.use(error())
 
 /* 
 简单实现log记录
@@ -40,14 +40,11 @@ app.use(error())
 async实现，不阻塞resopen,
 */
 app.context.log = {}
-app.use(async (ctx, next) => {
-    await next()
-    //console.log(ctx.body)
-})
+
 app.use(saveLog())
-//app.use(Logger())
+app.use(Logger())
 app.use(cors())
-app.use(mongo({ db: 'ladis', }))
+app.use(mongo({ db:config.DB_dev, }))
 app.use(body())
 
 /* 
@@ -119,7 +116,7 @@ event.on('devs', async data => {
         })
     } else {
         let db = await cm.Connect()
-        let devs_list = await db.db(config.DB_user).collection(config.DB_user_dev).find({ 'dev.devid': id }).project({ _id: 0, user: 1 }).toArray()
+        let devs_list = await db.db(config.DB_dev).collection(config.DB_user_dev).find({ 'dev.devid': id }).project({ _id: 0, user: 1 }).toArray()
         let user = devs_list.map(u => {
             return u.user
         })

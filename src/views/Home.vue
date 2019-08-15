@@ -190,7 +190,6 @@ export default {
           //清理store
           this.$store.commit("LoginOut",);
           //断开socket连接
-          socket.close()
           this.$router.push("/login");
         })
         .catch(() => {});

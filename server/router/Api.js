@@ -1,8 +1,4 @@
-
- 
-
 module.exports = async (ctx,next) => {
-    ctx.db = ctx.mongo.db('devs')
     var { type, updateTime, data, dataType } = ctx.request.body   
 
     if (['io', 'phase', 'th', 'ac', 'ups', 'power'].includes(type)) {
@@ -10,7 +6,7 @@ module.exports = async (ctx,next) => {
             //针对文档更新Array，$push or $addToSet
             ctx.event.emit('devs',{devs:data,type})
             data.DateTime = Date.now()
-            ctx.db.collection(type).insert(data)    
+            ctx.db.collection(type).insertOne(data)    
             
             //let res = await ctx.db.collection(type).replaceOne({devid: data.devid},data,{upsert:true})
             ctx.status = 200
@@ -21,7 +17,7 @@ module.exports = async (ctx,next) => {
             //updateOne({ devid: val.devid }, { $addToSet: { dataArray: {$each:[data]} } }, { upsert: true })
             for (let val of data) {
                 val.DateTime = Date.now()
-                ctx.db.collection(type).insert(val)
+                ctx.db.collection(type).insertOne(val)
                 ctx.event.emit('devs',{devs:val,type})
             }
             //await ctx.db.collection(type).deleteMany({ devid: { $in: devid_list } })

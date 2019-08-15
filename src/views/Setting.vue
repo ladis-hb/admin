@@ -7,7 +7,7 @@
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <h3>添加设备ID</h3>
             <el-form-item label="添加设备ID">
-              <el-input v-model="formInline.devid" placeholder="添加设备ID"></el-input>
+              <el-input v-model.trim="formInline.devid" placeholder="添加设备ID"></el-input>
             </el-form-item>
             <el-form-item label="设备类型">
               <el-select v-model="formInline.devType">

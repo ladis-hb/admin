@@ -7,10 +7,11 @@ const config = require('../config.js')
  */
 module.exports = function () {
     return async (ctx, next) => {
-        await next()
-        let {log} = ctx.body
-        if(log){
-            let { generateTime, status, msg, data ,user} = log
+        await next()     
+        
+        if(await ctx.body.log){
+            //console.log(ctx.body)
+            let { generateTime, status, msg, data ,user} = ctx.body.log
             ctx.db = ctx.mongo.db(config.DB_log)
             let collection
             switch (status) {

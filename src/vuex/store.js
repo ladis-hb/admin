@@ -98,10 +98,12 @@ const mutations = {
         state.devSocket[devType][devid] = (devs)
         state.dev[devType] = Object.values(state.devSocket[devType])
 
-        let arr = state.devs[devType][devid] || []
+        if(!state.devs[devType][devid]) Vue.set(state.devs[devType],devid,[])
+        let arr = state.devs[devType][devid]
         if (arr.length > state.devArrayLength) arr.shift()
         //配置devs
         if (devType == 'power') {
+            let newDevs = JSON.parse(JSON.stringify(devs))
             let metrics = [
                 "active_power", "reactive_power", "power_factor", "quantity", "input_voltage",
                 "input_voltage_l1", "input_voltage_l2", "input_voltage_l3",
@@ -109,11 +111,13 @@ const mutations = {
                 "input_frequency", "input_frequency_l1", "input_frequency_l2", "input_frequency_l3"]
 
             metrics.forEach(key => {
-                devs[key] = devs[key][2] || 0
+                newDevs[key] = devs[key][2]
             })
+            state.devs[devType][devid].push(newDevs)
+        }else{
+            state.devs[devType][devid].push(devs)
         }
-        state.devs[devType][devid] = [...arr, devs]
-
+        
 
     },
     SetDevs(state, data) {
