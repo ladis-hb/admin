@@ -42,7 +42,7 @@ async实现，不阻塞resopen,
 app.context.log = {}
 
 app.use(saveLog())
-app.use(Logger())
+//app.use(Logger())
 app.use(cors())
 app.use(mongo({ db:config.DB_dev, }))
 app.use(body())
@@ -111,6 +111,7 @@ event.on('devs', async data => {
     let id = devs.devid
     if (devsMap.has(id)) {
         let { user, devType } = devsMap.get(id)
+        //console.log(user)
         user.map(async u => {
             if (userMap.has(u)) io.to(userMap.get(u)).emit('newDevs', { devType, devs })
         })
@@ -126,12 +127,20 @@ event.on('devs', async data => {
 })
 
 event.on('adddevs', async data => {
+    console.log(`add设备::${JSON.stringify(data)}`);    
     let { devid, devType, user } = data
-    devsMap.set(devid, { devType, user: [user] })
+    let {user:devUser} = devsMap.get(devid)
+    devUser = Array.from(new Set([...devUser,user]))
+    devsMap.set(devid, { devType, user: devUser })
+    console.log(devsMap.get(devid))
 })
 event.on('deldevs', async data => {
-    let { devid } = data
-    devsMap.delete(devid)
+    console.log(`del设备::${JSON.stringify(data)}`);
+    let {devType, devid,user:delUser } = data
+    let {user:devUser} = devsMap.get(devid)
+    let devUserMap = new Set(devUser)
+    let newUser = Array.from(devUserMap)    
+    devsMap.set(devid,{devType,user:newUser})
 })
 
 
