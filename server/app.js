@@ -42,8 +42,12 @@ async实现，不阻塞resopen,
 app.context.log = {};
 
 app.use(saveLog());
+app.use(async (ctx, next) => {
+  ctx.set("Access-Control-Allow-Origin", "*");
+  await next();
+});
 //app.use(Logger())
-app.use(cors());
+//app.use(cors());
 app.use(mongo({ db: config.DB_dev }));
 app.use(body());
 

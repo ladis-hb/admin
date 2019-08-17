@@ -152,7 +152,7 @@ const getmail_Verification_code = async ctx => {
 };
 
 const resetpasswd = async ctx => {
-  let { params, query } = ctx;
+  let { query } = ctx;
   let { Validation, mail, passwd, passwdck } = query;
   if (passwd == passwdck) {
     let pw = formatMD5(formatPasswd(passwd));
@@ -160,10 +160,9 @@ const resetpasswd = async ctx => {
       .collection(config.DB_user_users)
       .updateOne(
         { mail, v_code: Validation },
-        { $set: { passwd: pw, modifyTime: formatDate() }, v_code: "" },
-        { upsert: true }
+        { $set: { passwd: pw, modifyTime: formatDate(),v_code:null}}
       );
-    if (save_v_code.result && save_v_code.result.ok > 0) {
+    if (save_v_code.result && save_v_code.result.n > 0) {
       ctx.body = formartBody(
         "success",
         "密码已完成修改，请自主选择下一步操作",
@@ -171,7 +170,7 @@ const resetpasswd = async ctx => {
         formatlog(config.log_resetpwSuccess, "用户完成修改密码", mail)
       );
     } else {
-      ctx.body = formartBody("warn", "保存密码出错，请联系管理员手工修改");
+      ctx.body = formartBody("warn", "保存密码出错，请核对验证码是否出错，或刷新页面重试");
     }
   } else {
     ctx.body = formartBody("warn", "二次输入密码不一致，请核对密码");

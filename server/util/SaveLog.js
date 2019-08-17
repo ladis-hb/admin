@@ -10,7 +10,7 @@ module.exports = function() {
   return async (ctx, next) => {
     await next();
     await ctx.body;
-    console.log(ctx.body)
+    console.log(ctx.body);
     if (await ctx.body.log) {
       //console.log(ctx.body)
       let { generateTime, status, msg, data, user } = ctx.body.log;
