@@ -34,12 +34,12 @@ const getUserInfo = async (ctx, u) => {
 };
 
 const addDevid = async (ctx, u) => {
-  let { query, user } = ctx;
-  let { devid, devType } = ctx.query;
+  let { query } = ctx;
+  let { devid, devType, user } = ctx.query;
   let result = await ctx.db
     .collection(config.DB_user_dev)
     .updateOne(
-      { user: u },
+      { user },
       { $addToSet: { dev: { type: devType, devid } } },
       { upsert: true }
     );
@@ -51,11 +51,11 @@ const addDevid = async (ctx, u) => {
       config.log_addDevid,
       `添加设备 ID：${devid}，类型：${devType}`,
       query,
-      u
+      user
     )
   );
   //添加了新的设备发送事件提醒刷新设备数组
-  ctx.event.emit("adddevs", { devid, devType, user: u });
+  ctx.event.emit("adddevs", { devid, devType, user });
 };
 
 const Get_devid_list = async (ctx, u) => {
@@ -65,21 +65,21 @@ const Get_devid_list = async (ctx, u) => {
   ctx.body = formartBody("success", "", result);
 };
 
-const delete_Devid = async (ctx, u) => {
+const delete_Devid = async ctx => {
   let { query } = ctx;
-  let { devid } = ctx.query;
+  let { devid, user } = ctx.query;
   let result = await ctx.db
     .collection(config.DB_user_dev)
-    .updateOne({ user: u }, { $pull: { dev: { devid } } });
+    .updateOne({ user }, { $pull: { dev: { devid } } });
   ctx.body = formartBody(
     "success",
     "",
     result.result,
-    formatlog(config.log_delDevid, `删除了设备，ID：${devid}`, query, u)
+    formatlog(config.log_delDevid, `删除了设备，ID：${devid}`, query, user)
   );
-  ctx.event.emit("deldevs", { devid, user: u });
+  ctx.event.emit("deldevs", { devid, user });
 };
-
+//new
 const Get_user_all_devs = async ctx => {
   let {
     query: { user, token },
@@ -99,5 +99,5 @@ module.exports = {
   addDevid,
   Get_devid_list,
   delete_Devid,
-  Get_user_all_devs,
+  Get_user_all_devs
 };

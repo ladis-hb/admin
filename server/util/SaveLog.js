@@ -9,8 +9,8 @@ const config = require("../config.js");
 module.exports = function() {
   return async (ctx, next) => {
     await next();
+    if (!ctx.body) return true;
     await ctx.body;
-    console.log(ctx.body);
     if (await ctx.body.log) {
       //console.log(ctx.body)
       let { generateTime, status, msg, data, user } = ctx.body.log;
@@ -20,6 +20,7 @@ module.exports = function() {
         case "loginSuccess":
         case "registerSuccess":
         case "resetpwSuccess":
+        case "modifyType":
           collection = ctx.db.collection(config.DB_log_run);
           break;
 

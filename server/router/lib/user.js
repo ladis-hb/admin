@@ -17,10 +17,10 @@ const login = async ctx => {
     .collection(config.DB_user_users)
     .findOne(
       { $or: [{ name: username }, { mail: username }] },
-      { name: 1, mail: 1, _id: 0 }
+      { name: 1, mail: 1, _id: 0, userId: 1 }
     );
   if (u) {
-    let { name, passwd, mail } = u;
+    let { name, passwd, mail, userId } = u;
     if (
       (name == username || mail == username) &&
       passwd == formatMD5(formatPasswd(password))
@@ -39,7 +39,7 @@ const login = async ctx => {
           let body = formartBody(
             "success",
             "用户登录成功",
-            { user: name, route: "/main", token },
+            { user: name, route: "/main", token, userId },
             formatlog(config.log_loginSuccess, "用户登录成功", query, username)
           );
           res(body);
@@ -95,6 +95,7 @@ const register = async ctx => {
       );
     } else {
       let user = {
+        userId: formatMD5(Date.now() + passwd),
         name,
         passwd: formatMD5(formatPasswd(passwd)),
         mail,
@@ -160,7 +161,7 @@ const resetpasswd = async ctx => {
       .collection(config.DB_user_users)
       .updateOne(
         { mail, v_code: Validation },
-        { $set: { passwd: pw, modifyTime: formatDate(),v_code:null}}
+        { $set: { passwd: pw, modifyTime: formatDate(), v_code: null } }
       );
     if (save_v_code.result && save_v_code.result.n > 0) {
       ctx.body = formartBody(
@@ -170,7 +171,10 @@ const resetpasswd = async ctx => {
         formatlog(config.log_resetpwSuccess, "用户完成修改密码", mail)
       );
     } else {
-      ctx.body = formartBody("warn", "保存密码出错，请核对验证码是否出错，或刷新页面重试");
+      ctx.body = formartBody(
+        "warn",
+        "保存密码出错，请核对验证码是否出错，或刷新页面重试"
+      );
     }
   } else {
     ctx.body = formartBody("warn", "二次输入密码不一致，请核对密码");
@@ -186,10 +190,42 @@ const getUserInfo = async ctx => {
     ctx.body = formartBody("success", "", { pic });
   }
 };
+
+/* 
+phone modify_user_info_one
+*/
+/*  */
+const modify_user_info_one = async ctx => {
+  let { user, modifyType, modifyVal } = ctx.query;
+  if (["mail", "orgin", "tel"].includes(modifyType))
+    ctx.body = formartBody("error", "请求修改类型错误", "");
+  let SetVal = { [modifyType]: modifyVal };
+  let result = await ctx.db
+    .collection(config.DB_user_users)
+    .updateOne({ name: user }, { $set: SetVal }, { upster: true });
+  ctx.body = formartBody(
+    "success",
+    "arg modify success",
+    result.result,
+    formatlog("modifyType", "修改用户参数", ctx.query, user)
+  );
+};
+/*  */
+const Get_user_info_one = async ctx => {
+  let { user } = ctx.query;
+  let result = await ctx.db
+    .collection(config.DB_user_users)
+    .find({ name: user })
+    .project({ _id: 0, passwd: 0, modifyTime: 0, token: 0 })
+    .toArray();
+  ctx.body = formartBody("success", "", result);
+};
 module.exports = {
   login,
   register,
   getmail_Verification_code,
   resetpasswd,
-  getUserInfo
+  getUserInfo,
+  modify_user_info_one,
+  Get_user_info_one
 };

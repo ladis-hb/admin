@@ -2,16 +2,28 @@
   <div class="pages2">
     <el-container class="container .min-container">
       <el-main>
-        <el-page-header class="page-head" @back="goBack" content="设置  Setting"></el-page-header>
+        <el-page-header
+          class="page-head"
+          @back="goBack"
+          content="设置  Setting"
+        ></el-page-header>
         <div class="block">
           <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <h3>添加设备ID</h3>
             <el-form-item label="添加设备ID">
-              <el-input v-model.trim="formInline.devid" placeholder="添加设备ID"></el-input>
+              <el-input
+                v-model.trim="formInline.devid"
+                placeholder="添加设备ID"
+              ></el-input>
             </el-form-item>
             <el-form-item label="设备类型">
               <el-select v-model="formInline.devType">
-                <el-option v-for="(val,key) in devType" :key="key" :label="lang[val]" :value="val"></el-option>
+                <el-option
+                  v-for="(val, key) in devType"
+                  :key="key"
+                  :label="lang[val]"
+                  :value="val"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -23,19 +35,33 @@
           <el-form>
             <h3>获取所有设备列表</h3>
             <el-form-item>
-              <el-button type="info" @click="Get_devid_list">获取列表</el-button>
+              <el-button type="info" @click="Get_devid_list"
+                >获取列表</el-button
+              >
             </el-form-item>
             <el-form-item>
               <el-table :data="david_list">
-                <el-table-column prop="type" label="设备类型" width="180" sortable></el-table-column>
-                <el-table-column prop="devid" label="设备ID" width="180"></el-table-column>
+                <el-table-column
+                  prop="type"
+                  label="设备类型"
+                  width="180"
+                  sortable
+                ></el-table-column>
+                <el-table-column
+                  prop="devid"
+                  label="设备ID"
+                  width="180"
+                ></el-table-column>
                 <el-table-column fixed="right" label="操作" width="120">
                   <template slot-scope="scope">
                     <el-button
-                      @click.native.prevent="delete_Devid(scope.row.devid, david_list)"
+                      @click.native.prevent="
+                        delete_Devid(scope.row.devid, david_list)
+                      "
                       type="text"
                       size="small"
-                    >移除</el-button>
+                      >移除</el-button
+                    >
                   </template>
                 </el-table-column>
               </el-table>
@@ -43,14 +69,19 @@
           </el-form>
         </div>
         <div class="block">
-          <el-form class="main-i" @submit.native.prevent label-position="right" label-width="160px">
+          <el-form
+            class="main-i"
+            @submit.native.prevent
+            label-position="right"
+            label-width="160px"
+          >
             <h3>设置折线图数据条目</h3>
             <el-form-item label="数据条目默认为10条：">
               <el-input v-model="data_update_devArrayLength"></el-input>
             </el-form-item>
           </el-form>
         </div>
-        
+
         <div class="block">
           <el-form>
             <el-form-item label="获取Store数据池数据">
@@ -90,9 +121,9 @@ export default {
         this.$store.commit("SETinterval", val);
       }
     },
-    data_update_devArrayLength:{
+    data_update_devArrayLength: {
       get() {
-        return this.$store.state.devArrayLength
+        return this.$store.state.devArrayLength;
       },
       set(val) {
         this.$store.commit("SetdevArrayLength", val);
@@ -118,8 +149,8 @@ export default {
     }
   },
   methods: {
-    goBack(){
-      this.$router.go(-1)
+    goBack() {
+      this.$router.go(-1);
     },
     delete_Devid(index) {
       this.$confirm(`此操作将删除设备：${index}, 是否继续?`, "提示", {
@@ -159,7 +190,7 @@ export default {
     },
     devid_Submit() {
       if (this.formInline.devType == "" || this.formInline.devid == "") return;
-      this.formInline.devid = this.formInline.devid.trim()
+      this.formInline.devid = this.formInline.devid.trim();
       addDevid(
         Object.assign(this.formInline, {
           user: this.Sysname,
@@ -195,7 +226,7 @@ export default {
   }
 }
 
-.page-head{
+.page-head {
   padding: 1rem;
   font-size: 20px;
   border-bottom: groove;

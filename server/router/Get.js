@@ -6,7 +6,9 @@ const {
   login,
   register,
   getmail_Verification_code,
-  resetpasswd
+  resetpasswd,
+  modify_user_info_one,
+  Get_user_info_one
 } = require("./lib/user");
 
 //devs fun
@@ -90,6 +92,12 @@ module.exports = async (ctx, next) => {
         //phone pages only
         case "Get_user_all_devs":
           await Get_user_all_devs(ctx);
+          break;
+        case "modify_user_info_one":
+          await modify_user_info_one(ctx);
+          break;
+        case "Get_user_info_one":
+          await Get_user_info_one(ctx);
           break;
       }
     }

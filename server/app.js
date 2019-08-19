@@ -166,15 +166,21 @@ event.on("adddevs", async data => {
   console.log(`add设备::${JSON.stringify(data)}`);
   let { devid, devType, user } = data;
   let { user: devUser } = devsMap.get(devid);
+  /* if user 还没有用户登录，user会获取一个空值 */
   devUser = Array.from(new Set([...devUser, user]));
   devsMap.set(devid, { devType, user: devUser });
   console.log(devsMap.get(devid));
 });
 event.on("deldevs", async data => {
   console.log(`del设备::${JSON.stringify(data)}`);
-  let { devType, devid, user: delUser } = data;
-  let { user: devUser } = devsMap.get(devid);
-  let devUserMap = new Set(devUser);
+  let { devid, user: deluser } = data;
+  let D = devsMap.get(devid);
+  if (!D) return console.log(`设备：${devid} 不在线，无需在devmap中删除`);
+  let { user: devUser, devType } = D;
+  let devUserMap = new Set();
+  for (let u of devUser) {
+    if (u != deluser) devUserMap.add(u);
+  }
   let newUser = Array.from(devUserMap);
   devsMap.set(devid, { devType, user: newUser });
 });
