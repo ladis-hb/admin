@@ -5,6 +5,10 @@ module.exports = {
     ? "http://127.0.0.1:3000/Api/dev"
     : "http://127.0.0.1:81/Api/dev",
   //
+  Alarm_api: this.development
+    ? "http://127.0.0.1:3000/Api/Alarm"
+    : "http://127.0.0.1:81/Api/Alarm",
+  //
   port: 81,
   development_port: 3000,
   //
@@ -21,6 +25,8 @@ module.exports = {
   Devs: ["ups", "ac", "power", "th", "io"],
 
   DB_dev: "devs",
+
+  DB_Alarm:"Dev_Alarm",
 
   DB_user: "devs",
   DB_user_users: "users",

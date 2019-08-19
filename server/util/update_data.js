@@ -89,25 +89,25 @@ OR
      insertedIds: { '0': '5d43e984cac69347f792f7b5' } } }
 
 */
-
-const axios = require('axios')
-const { formatDate } = require('./Format')
-const config = require('../config')
+/* jshint esversion:8 */
+const axios = require("axios");
+const { formatDate } = require("./Format");
+const config = require("../config");
 
 var simulate_ups = () => {
   return {
-    type: 'ups',
+    type: "ups",
     updateTime: formatDate(),
-    dataType: 'One',
+    dataType: "One",
     data: {
       generateTime: formatDate(),
-      name: 'ups-00787',
+      name: "ups-00787",
       devid: "1a24d35sa",
-      brand: 'ladis',
-      temperature: '25',
+      brand: "ladis",
+      temperature: "25",
 
       status: 1,
-      phase: 'd73a52s',
+      phase: "d73a52s",
       residual_capacity: getRndInteger(3),
       battery_voltage: getRndInteger(4),
       battery_voltage_negative: getRndInteger(9),
@@ -122,21 +122,21 @@ var simulate_ups = () => {
       output_voltage_l2: getRndInteger(),
       output_voltage_l3: getRndInteger()
     }
-  }
-}
+  };
+};
 
 var simulate_col = () => {
   return {
-    type: 'ac',
+    type: "ac",
     updateTime: formatDate(),
-    dataType: 'One',
+    dataType: "One",
     data: {
       generateTime: formatDate(),
-      name: 'ac-007',
+      name: "ac-007",
       devid: "21s5a8d41",
-      brand: 'ladis',
+      brand: "ladis",
       refrigeration_temperature: getRndInteger(),
-      mode: ['stand', 'run', 'stop'],
+      mode: ["stand", "run", "stop"],
       refrigeration_stop_deviation: getRndInteger(),
       evaporation_start_temperature: getRndInteger(),
       air_change_time: getRndInteger(),
@@ -155,87 +155,87 @@ var simulate_col = () => {
       temperature_difference: getRndInteger(),
       air_supply_temperature: getRndInteger()
     }
-  }
-}
+  };
+};
 
 var simulate_io = () => {
   return {
-    type: 'io',
+    type: "io",
     updateTime: formatDate(),
-    dataType: 'Many',
+    dataType: "Many",
     data: [
       {
         generateTime: formatDate(),
-        name: 'io-007777',
+        name: "io-007777",
         devid: "15awx3233",
-        brand: 'ladis',
+        brand: "ladis",
         power_status: true,
         input_status: false
       },
       {
         generateTime: formatDate(),
-        name: 'io-007',
+        name: "io-007",
         devid: "a35d453x4",
-        brand: 'ladis',
+        brand: "ladis",
         power_status: true,
         input_status: false
       },
       {
         generateTime: formatDate(),
-        name: 'io-007',
+        name: "io-007",
         devid: "dcsc42545615",
-        brand: 'ladis',
+        brand: "ladis",
         power_status: true,
         input_status: false
-      },
+      }
     ]
-  }
-}
+  };
+};
 
 var simulate_th = () => {
   return {
-    type: 'th',
+    type: "th",
     updateTime: formatDate(),
-    dataType: 'Many',
+    dataType: "Many",
     data: [
       {
         generateTime: formatDate(),
-        name: 'th-007',
+        name: "th-007",
         devid: "csd654c5d6",
-        brand: 'ladis',
+        brand: "ladis",
         temperature: getRndInteger(),
         humidity: getRndInteger()
       },
       {
         generateTime: formatDate(),
-        name: 'th-007',
+        name: "th-007",
         devid: "7cxse5c45",
-        brand: 'ladis',
+        brand: "ladis",
         temperature: getRndInteger(),
         humidity: getRndInteger()
       },
       {
         generateTime: formatDate(),
-        name: 'th-007',
+        name: "th-007",
         devid: "cdscfdsrf8",
-        brand: 'ladis',
+        brand: "ladis",
         temperature: getRndInteger(),
         humidity: getRndInteger()
-      },
+      }
     ]
-  }
-}
+  };
+};
 
 var simulate_power = () => {
   return {
-    type: 'power',
+    type: "power",
     updateTime: formatDate(),
-    dataType: 'One',
+    dataType: "One",
     data: {
       generateTime: formatDate(),
-      name: 'power-007',
+      name: "power-007",
       devid: "9sdd",
-      brand: 'ladis',
+      brand: "ladis",
       active_power: [10, 1, getRndInteger()],
       reactive_power: [100, 2, getRndInteger()],
       power_factor: [99, 3, getRndInteger()],
@@ -251,29 +251,37 @@ var simulate_power = () => {
       input_frequency: [10, 1, getRndInteger()],
       input_frequency_l1: [10, 1, getRndInteger()],
       input_frequency_l2: [10, 1, getRndInteger()],
-      input_frequency_l3: [10, 1, getRndInteger()],
+      input_frequency_l3: [10, 1, getRndInteger()]
     }
-  }
-}
-
+  };
+};
 
 function getRndInteger() {
   return Math.floor(Math.random() * (100 - 0)) + 0;
 }
 
-var simulate_dev = [simulate_col, simulate_io, simulate_power, simulate_th, simulate_ups]
-maps()
-setInterval(maps, 5000)
+var simulate_dev = [
+  simulate_col,
+  simulate_io,
+  simulate_power,
+  simulate_th,
+  simulate_ups
+];
+maps();
+setInterval(maps, 5000);
 
 function maps() {
-  console.log('setInterval 1000')
+  console.log("setInterval 1000");
   simulate_dev.map(val => {
-    axios.post(config.dev_api, val()).then(res => {
-      console.log(config.dev_api);
-      
-      console.log(res.data)
-    }).catch(err => {
-      console.log({ err: err, val: JSON.stringify(err) })
-    })
-  })
+    axios
+      .post(config.dev_api, val())
+      .then(res => {
+        console.log(config.dev_api);
+
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log({ err: err, val: JSON.stringify(err) });
+      });
+  });
 }
