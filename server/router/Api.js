@@ -63,27 +63,37 @@ module.exports = async (ctx, next) => {
       case "Alarm":
         {
           let {
+            DeviceId,
             Alarm_msg,
             Alarm_type,
             Alarm_device,
             Alarm_level,
             Alarm_time
           } = ctx.request.body;
+          //console.log(ctx.request.body);
           //
           const type = ["超下限", "告警恢复", "告警"];
           const dev = ["ups", "ac", "power", "io", "th"];
           const level = [0, 1, 2];
           //
-
-          //
-          let result = await ctx.db.collection(config.DB_Alarm).insertOne({
+          let Alarms = {
+            DeviceId,
             Alarm_time,
             Alarm_msg,
             Alarm_device,
             Alarm_level,
             Alarm_type,
-            DateTime: Date.now()
-          });
+            DateTime: Date.now(),
+            confirm: false,
+            confirm_user: "",
+            confirm_time: null
+          };
+          //
+          ctx.event.emit("Alarm", Alarms);
+          //
+          let result = await ctx.db
+            .collection(config.DB_Alarm)
+            .insertOne(Alarms);
           ctx.status = 200;
           ctx.body = {
             code: 200,

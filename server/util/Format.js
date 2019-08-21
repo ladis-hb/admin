@@ -1,6 +1,7 @@
 /* jshint esversion:8 */
 const crypto = require("crypto");
 const config = require("../config");
+const mongodb = require("mongodb");
 /**
  *
  *
@@ -102,6 +103,10 @@ const Validation_user = async (ctx, data) => {
   };
   return result;
 };
+/* 
+ObjectId
+*/
+const ObjectId = mongodb.ObjectId;
 
 module.exports = {
   formartBody,
@@ -109,5 +114,6 @@ module.exports = {
   formatMD5,
   formatDate,
   formatlog,
-  Validation_user
+  Validation_user,
+  ObjectId
 };

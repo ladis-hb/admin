@@ -30,6 +30,9 @@ const {
   modify_user_info
 } = require("./lib/administrator");
 
+//Alarm
+const { GetAlarms, confirm_alarm } = require("./lib/alarm");
+
 module.exports = async (ctx, next) => {
   let { params, query } = ctx;
   let { token, user } = query;
@@ -98,6 +101,12 @@ module.exports = async (ctx, next) => {
           break;
         case "Get_user_info_one":
           await Get_user_info_one(ctx);
+          break;
+        case "GetAlarms":
+          await GetAlarms(ctx);
+          break;
+        case "confirm_alarm":
+          await confirm_alarm(ctx);
           break;
       }
     }

@@ -170,7 +170,7 @@ export default {
   }
 }
 .background {
-  background-image: url("../assets/bg5.png");
+  //background-image: url("../assets/bg5.png");
   height: 100%;
   overflow: hidden;
   background-size: cover;

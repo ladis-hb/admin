@@ -4,6 +4,7 @@ const IO = require("koa-socket-2");
 const KoaStatic = require("koa-static");
 const path = require("path");
 const Logger = require("koa-logger");
+const cors = require("koa-cors");
 const mongo = require("koa-mongo");
 const CM = require("./util/MongoDB");
 const body = require("koa-body");
@@ -31,14 +32,22 @@ app.context.event = event;
 /* 
 最后拦截error
 */
-app.use(error());
+//app.use(error())
+
+/* 
+简单实现log记录
+通过委托log属性在ctx.log，实现在链路最后端检查log
+async实现，不阻塞resopen,
+*/
+app.context.log = {};
 
 app.use(saveLog());
 app.use(async (ctx, next) => {
   ctx.set("Access-Control-Allow-Origin", "*");
   await next();
 });
-app.use(Logger());
+//app.use(Logger())
+//app.use(cors());
 app.use(mongo({ db: config.DB_dev }));
 app.use(body());
 
@@ -152,7 +161,7 @@ event.on("devs", async data => {
     devsMap.set(id, { devType: type, user });
   }
 });
-/* add device */
+
 event.on("adddevs", async data => {
   console.log(`add设备::${JSON.stringify(data)}`);
   let { devid, devType, user } = data;
@@ -162,7 +171,6 @@ event.on("adddevs", async data => {
   devsMap.set(devid, { devType, user: devUser });
   console.log(devsMap.get(devid));
 });
-/* delete device */
 event.on("deldevs", async data => {
   console.log(`del设备::${JSON.stringify(data)}`);
   let { devid, user: deluser } = data;
@@ -175,16 +183,6 @@ event.on("deldevs", async data => {
   }
   let newUser = Array.from(devUserMap);
   devsMap.set(devid, { devType, user: newUser });
-});
-/* Alarm */
-event.on("Alarm", async data => {
-  if (!devsMap.get(data.DeviceId)) return false;
-  let { user } = devsMap.get(data.DeviceId) || null;
-  if (!user) return;
-  //console.log(user);
-  user.forEach(u => {
-    io.to(userMap.get(u)).emit("Alarm", data);
-  });
 });
 
 /* 

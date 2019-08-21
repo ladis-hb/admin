@@ -43,7 +43,7 @@ const login = async ctx => {
             formatlog(config.log_loginSuccess, "用户登录成功", query, username)
           );
           res(body);
-        }, 3000);
+        }, 1000);
       });
       ctx.body = await body;
     } else {
