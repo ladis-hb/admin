@@ -18,7 +18,8 @@ const {
   addDevid,
   Get_devid_list,
   delete_Devid,
-  Get_user_all_devs
+  Get_user_all_devs,
+  Modify_devName
 } = require("./lib/devs");
 
 //log fun
@@ -107,6 +108,9 @@ module.exports = async (ctx, next) => {
           break;
         case "confirm_alarm":
           await confirm_alarm(ctx);
+          break;
+        case "Modify_devName":
+          await Modify_devName(ctx);
           break;
       }
     }

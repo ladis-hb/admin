@@ -10,7 +10,7 @@ const mongodb = require("mongodb");
  * @param {*} data body data
  * @returns
  */
-const formartBody = (status, msg, data, log) => {
+const formartBody = (status, msg, data) => {
   let statu = {
     error: 404,
     success: 200,
@@ -19,8 +19,7 @@ const formartBody = (status, msg, data, log) => {
   };
   let body = data || {};
   msg = typeof msg == "string" ? msg : "";
-  log = log || false;
-  return { code: statu[status], msg: msg, data: body, log };
+  return { code: statu[status], msg: msg, data: body };
 };
 
 /**
@@ -61,27 +60,8 @@ const formatDate = () => {
   let dates = new Date();
   let date = `${dates.getFullYear()}/${dates.getMonth() +
     1}/${dates.getDate()}`;
-  let time = `${dates.getHours()}:${dates.getMinutes()}:${dates.getSeconds()}:${dates.getMilliseconds()}`;
+  let time = `${dates.getHours()}:${dates.getMinutes()}:${dates.getSeconds()}`; //:${dates.getMilliseconds()}`;
   return `${date} ${time}`;
-};
-
-/*
- *
- *
- *  @param {*} status 日志状态
- * @param {*} msg    日志信息
- * @param {*} data   携带数据
- * @param {*} users  用户
- * @returns
- */
-const formatlog = (status, msg, data, user) => {
-  return {
-    status: status,
-    msg: msg,
-    data: data,
-    user: user || "no record",
-    generateTime: formatDate()
-  };
 };
 
 /**
@@ -93,13 +73,15 @@ const formatlog = (status, msg, data, user) => {
  */
 const Validation_user = async (ctx, data) => {
   let { user, token } = data;
-  ctx.db = ctx.mongo.db(config.DB_user);
-  let s = await ctx.db.collection("users").findOne({ name: user, token });
+  let s = await ctx.db
+    .collection(config.DB_user_users)
+    .findOne({ user, token });
   if (s) status = true;
   else status = false;
   let result = {
     status,
-    u: user
+    user,
+    userGroup: s.userGroup
   };
   return result;
 };
@@ -113,7 +95,6 @@ module.exports = {
   formatPasswd,
   formatMD5,
   formatDate,
-  formatlog,
   Validation_user,
   ObjectId
 };

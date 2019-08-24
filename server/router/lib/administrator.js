@@ -20,6 +20,7 @@ const admin_get_info_list = async (ctx, u) => {
         })
         .toArray();
       ctx.body = formartBody("success", "", users);
+      ctx.log = { type: config.DB_log_run, msg: "获取所有用户列表" };
       break;
     case "ups":
     case "ac":
@@ -40,6 +41,7 @@ const admin_get_info_list = async (ctx, u) => {
         }
       });
       ctx.body = formartBody("success", "", devs_serize);
+      ctx.log = { type: config.DB_log_run, msg: "获取所有设备列表" };
       break;
   }
 };
@@ -50,6 +52,7 @@ const modify_user_info = async (ctx, u) => {
     .collection(config.DB_user_users)
     .updateOne({ mail }, { $set: { name, orgin, tel } }, { upsert: true });
   ctx.body = formartBody("success", "", result);
+  ctx.log = { type: config.DB_log_run, msg: "修改用户信息" };
 };
 
 module.exports = { admin_get_info_list, modify_user_info };

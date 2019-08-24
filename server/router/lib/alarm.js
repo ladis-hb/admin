@@ -31,6 +31,7 @@ const confirm_alarm = async ctx => {
       { $set: { confirm: true, confirm_user: user, confirm_time: new Date() } }
     );
   ctx.body = formartBody("success", "报警消息已确认", result.result);
+  ctx.log = { type: config.DB_log_dev, msg: "确认报警消息" };
 };
 
 module.exports = { GetAlarms, confirm_alarm };

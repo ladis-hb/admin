@@ -36,7 +36,7 @@ const Get_user_info = async ctx => {
     .collection(collection)
     .find(q)
     .sort({ generateTime: -1 })
-    .project({ _id: 0, data: 0 })
+    .project({ _id: 0, query: 0 })
     .toArray();
   ctx.body = formartBody("success", "", run);
 };
